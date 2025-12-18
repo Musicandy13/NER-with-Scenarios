@@ -475,14 +475,14 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
- return (
+return (
     <div style={{ backgroundColor: "#005CA9" }}>
       <div
         ref={pageRef}
         className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
         style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
       >
-        {/* NEW WRAPPER: Everything inside this div is included in the Full PNG export */}
+        {/* NEW WRAPPER: Captures Header + Inputs + Results ONLY */}
         <div ref={calculatorRef}>
           {/* ===== HEADER & TENANT ===== */}
           <div ref={mainContentRef}>
@@ -504,7 +504,7 @@ export default function App() {
 
           {/* ===== MAIN GRID: INPUTS & RESULTS ===== */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* LEFT: Inputs (Restored from your original code) */}
+            {/* LEFT: Inputs */}
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <NumericField label="NLA (sqm)" value={f.nla} onChange={S("nla")} />
@@ -552,7 +552,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* RIGHT: Results (Restored from your original code) */}
+            {/* RIGHT: Results */}
             <div className="md:sticky md:top-6 h-fit">
               <div className="rounded-lg border p-4 space-y-2 bg-white">
                 <div ref={resultsContentRef}>
@@ -635,7 +635,7 @@ export default function App() {
             </div>
           </div>
         </div> 
-        {/* END OF EXPORT WRAPPER */}
+        {/* ^ CLOSES calculatorRef - IMPORTANT */}
 
         {/* ===== SCENARIO COMPARISON TABLE ===== */}
         <div className="mt-6 border rounded-lg overflow-hidden">
@@ -717,3 +717,4 @@ export default function App() {
       </div>
     </div>
   );
+}
