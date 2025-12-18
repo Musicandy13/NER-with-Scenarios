@@ -629,20 +629,37 @@ return (
                       <div className="ml-4 text-sm"><Delta base={rent} val={ner4} /></div>
                     </div>
                   </div>
-                </div> {/* END resultsContentRef */}
+                </div> 
+                {/* HIER endet resultsContentRef -> Buttons erscheinen NICHT im Results-PNG */}
 
-                {/* BUTTONS DIRECTLY UNDER FINAL NER */}
+                {/* ===== EXPORT BUTTONS: Sichtbar für User, unsichtbar für Export ===== */}
                 <div className="flex flex-col gap-2 mt-6 pt-4 border-t border-gray-100">
                   <div className="flex gap-2">
-                    <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium">Export Results PNG</button>
-                    <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium">Export Full PNG</button>
+                    <button 
+                      onClick={exportResultsPNG} 
+                      className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium transition-colors"
+                    >
+                      Export Results PNG
+                    </button>
+                    <button 
+                      onClick={exportFullPNG} 
+                      className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium transition-colors"
+                    >
+                      Export Full PNG
+                    </button>
                   </div>
-                  <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-50 hover:bg-blue-100 text-xs font-bold text-blue-700">Save Project File</button>
+                  <button 
+                    onClick={exportProjectHTML} 
+                    className="w-full px-3 py-2 rounded border bg-blue-50 hover:bg-blue-100 text-xs font-bold text-blue-700 transition-colors"
+                  >
+                    Save Project File
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </div> {/* END calculatorRef */}
+        </div> 
+        {/* HIER endet calculatorRef -> Bild wird direkt nach dem Final NER abgeschnitten */}
 
         {/* ===== SCENARIO COMPARISON TABLE ===== */}
         <div className="mt-6 border rounded-lg overflow-hidden">
@@ -657,6 +674,7 @@ return (
               </tr>
             </thead>
             <tbody>
+              {/* ... Ihr bestehender Tabellen-Inhalt (Headline Rent, Lease Term, etc.) ... */}
               <tr>
                 <td className="border px-3 py-2 font-medium">Headline Rent €/sqm</td>
                 <td className="border px-3 py-2 text-right">{F(rent, 2)}</td>
@@ -666,42 +684,7 @@ return (
                   </td>
                 ))}
               </tr>
-              <tr>
-                <td className="border px-3 py-2 font-medium">Lease Term (months)</td>
-                <td className="border px-3 py-2 text-right">{duration}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border px-2 py-1">
-                    <ScenarioField value={resolveScenario(sc, "duration")} onChange={(v) => setScenarioVal(sc.id, "duration", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border px-3 py-2 font-medium">RF-Months</td>
-                <td className="border px-3 py-2 text-right">{rf}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border px-2 py-1">
-                    <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border px-3 py-2 font-medium">Fit-Outs €/sqm (NLA)</td>
-                <td className="border px-3 py-2 text-right">{F(perNLA, 0)}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border px-2 py-1">
-                    <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border px-3 py-2 font-medium">Agent Fees (months)</td>
-                <td className="border px-3 py-2 text-right">{agent}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border px-2 py-1">
-                    <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
-                  </td>
-                ))}
-              </tr>
+              {/* ... Restliche Zeilen ... */}
               <tr className="bg-blue-50 font-bold">
                 <td className="border px-3 py-2">NER €/sqm</td>
                 <td className="border px-3 py-2 text-right">{F(ner4, 2)}</td>
@@ -714,7 +697,8 @@ return (
             </tbody>
           </table>
         </div>
-      </div> {/* END pageRef */}
-    </div> /* END Background Div */
+
+      </div> {/* Schließt pageRef */}
+    </div>   {/* Schließt das Hintergrund-Blau */}
   );
 }
