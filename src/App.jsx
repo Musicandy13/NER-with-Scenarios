@@ -554,7 +554,7 @@ return (
 
             {/* RIGHT: Results */}
             <div className="md:sticky md:top-6 h-fit">
-              <div className="rounded-lg border p-4 space-y-2 bg-white">
+              <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm">
                 <div ref={resultsContentRef}>
                   {f.tenant.trim() && (
                     <div className="mb-3">
@@ -615,7 +615,6 @@ return (
                           </label>
                         </div>
                       </div>
-
                       {viewMode === "bars"
                         ? <BarsChart data={nerBars} isExporting={isExporting} />
                         : <WaterfallChart data={wfData} isExporting={isExporting} />
@@ -630,37 +629,20 @@ return (
                       <div className="ml-4 text-sm"><Delta base={rent} val={ner4} /></div>
                     </div>
                   </div>
+                </div> {/* END resultsContentRef */}
+
+                {/* BUTTONS DIRECTLY UNDER FINAL NER */}
+                <div className="flex flex-col gap-2 mt-6 pt-4 border-t border-gray-100">
+                  <div className="flex gap-2">
+                    <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium">Export Results PNG</button>
+                    <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium">Export Full PNG</button>
+                  </div>
+                  <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-50 hover:bg-blue-100 text-xs font-bold text-blue-700">Save Project File</button>
                 </div>
               </div>
             </div>
           </div>
-        </div> 
-        {/* ^ CLOSES calculatorRef - IMPORTANT */}
-
-        <div className="flex flex-col gap-2 mt-6">
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={exportResultsPNG} 
-                      className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium transition-colors"
-                    >
-                      Export Results PNG
-                    </button>
-                    <button 
-                      onClick={exportFullPNG} 
-                      className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-medium transition-colors"
-                    >
-                      Export Full PNG
-                    </button>
-                  </div>
-                  <button 
-                    onClick={exportProjectHTML} 
-                    className="w-full px-3 py-2 rounded border bg-blue-50 hover:bg-blue-100 text-xs font-bold text-blue-700 transition-colors"
-                  >
-                    Save Project File
-                  </button>
-                </div>
-              </div>
-            </div>
+        </div> {/* END calculatorRef */}
 
         {/* ===== SCENARIO COMPARISON TABLE ===== */}
         <div className="mt-6 border rounded-lg overflow-hidden">
@@ -732,5 +714,7 @@ return (
             </tbody>
           </table>
         </div>
-       );
+      </div> {/* END pageRef */}
+    </div> /* END Background Div */
+  );
 }
