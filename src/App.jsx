@@ -418,6 +418,7 @@ export default function App() {
   const pageRef = useRef(null);
   const mainContentRef = useRef(null);
   const resultsContentRef = useRef(null);
+  const calculatorRef = useRef(null);
 
   const exportNode = async (node, filename) => {
     if (!node) return;
@@ -456,9 +457,10 @@ export default function App() {
   };
 
   const exportFullPNG = async () => {
-    const fname = f.tenant?.trim() ? `${f.tenant.trim()}-full.png` : "ner-full.png";
-    await exportNode(pageRef.current, fname);
-  };
+  const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
+  // Change pageRef.current to calculatorRef.current
+  await exportNode(calculatorRef.current, fname); 
+};
 
   const exportProjectHTML = () => {
     const data = encodeURIComponent(JSON.stringify(f));
