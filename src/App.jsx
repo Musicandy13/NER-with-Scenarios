@@ -475,164 +475,167 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  return (
+ return (
     <div style={{ backgroundColor: "#005CA9" }}>
       <div
         ref={pageRef}
         className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
         style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
       >
-        {/* ===== HEADER & TENANT ===== */}
-        <div ref={mainContentRef}>
-          <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
-            Net Effective Rent (NER) Calculator
-          </h2>
-          <div className="mb-4 flex justify-center">
-            <div className="w-full md:w-1/2">
-              <input
-                type="text"
-                value={f.tenant}
-                onChange={(e) => S("tenant")(e.target.value)}
-                placeholder="Tenant"
-                className="mt-1 block w-full border rounded-md p-2 text-center"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* ===== MAIN GRID: INPUTS & RESULTS ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* LEFT: Inputs */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <NumericField label="NLA (sqm)" value={f.nla} onChange={S("nla")} />
-              <NumericField label="Add-On (%)" value={f.addon} onChange={S("addon")} />
-              <label className="block">
-                <span className="text-gray-700">GLA (sqm)</span>
+        {/* NEW WRAPPER: Everything inside this div is included in the Full PNG export */}
+        <div ref={calculatorRef}>
+          {/* ===== HEADER & TENANT ===== */}
+          <div ref={mainContentRef}>
+            <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
+              Net Effective Rent (NER) Calculator
+            </h2>
+            <div className="mb-4 flex justify-center">
+              <div className="w-full md:w-1/2">
                 <input
-                  readOnly
-                  value={F(gla, 2)}
-                  className="mt-1 block w-full border rounded-md p-2 bg-gray-100 text-gray-600"
+                  type="text"
+                  value={f.tenant}
+                  onChange={(e) => S("tenant")(e.target.value)}
+                  placeholder="Tenant"
+                  className="mt-1 block w-full border rounded-md p-2 text-center"
                 />
-              </label>
-              <NumericField label="Headline Rent €/sqm" value={f.rent} onChange={S("rent")} step={0.5} />
-              <NumericField label="Lease Term (months)" value={f.duration} onChange={S("duration")} format="int" />
-              <NumericField label="Rent-Free (months)" value={f.rf} onChange={S("rf")} />
-            </div>
-
-            {/* Fit-Out block */}
-            <div className="border rounded-md p-3">
-              <div className="flex flex-wrap items-center gap-4 mb-3">
-                <span className="text-gray-700 font-medium">Fit-Out Input:</span>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={f.fitMode === "perNLA"} onChange={() => S("fitMode")("perNLA")} />
-                  <span>€/sqm (NLA)</span>
-                </label>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={f.fitMode === "perGLA"} onChange={() => S("fitMode")("perGLA")} />
-                  <span>€/sqm (GLA)</span>
-                </label>
-                <label className="inline-flex items-center gap-2">
-                  <input type="radio" checked={f.fitMode === "total"} onChange={() => S("fitMode")("total")} />
-                  <span>Total (€)</span>
-                </label>
               </div>
-              <div className="space-y-3">
-                <NumericField label="Fit-Out €/sqm (NLA)" value={f.fitPerNLA} onChange={S("fitPerNLA")} readOnly={f.fitMode !== "perNLA"} suffix="€/sqm" />
-                <NumericField label="Fit-Out €/sqm (GLA)" value={f.fitPerGLA} onChange={S("fitPerGLA")} readOnly={f.fitMode !== "perGLA"} suffix="€/sqm" />
-                <NumericField label="Fit-Out Total (€)" value={f.fitTot} onChange={S("fitTot")} readOnly={f.fitMode !== "total"} suffix="€" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
-              <NumericField label="Unforeseen Costs (lump sum €)" value={f.unforeseen} onChange={S("unforeseen")} suffix="€" />
             </div>
           </div>
 
-          {/* RIGHT: Results */}
-          <div className="md:sticky md:top-6 h-fit">
-            <div className="rounded-lg border p-4 space-y-2 bg-white">
-              <div ref={resultsContentRef}>
-                {f.tenant.trim() && (
-                  <div className="mb-3">
-                    <span className="text-xl font-bold">
-                      Tenant: <u>{f.tenant.trim()}</u>
-                    </span>
-                  </div>
-                )}
+          {/* ===== MAIN GRID: INPUTS & RESULTS ===== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* LEFT: Inputs (Restored from your original code) */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <NumericField label="NLA (sqm)" value={f.nla} onChange={S("nla")} />
+                <NumericField label="Add-On (%)" value={f.addon} onChange={S("addon")} />
+                <label className="block">
+                  <span className="text-gray-700">GLA (sqm)</span>
+                  <input
+                    readOnly
+                    value={F(gla, 2)}
+                    className="mt-1 block w-full border rounded-md p-2 bg-gray-100 text-gray-600"
+                  />
+                </label>
+                <NumericField label="Headline Rent €/sqm" value={f.rent} onChange={S("rent")} step={0.5} />
+                <NumericField label="Lease Term (months)" value={f.duration} onChange={S("duration")} format="int" />
+                <NumericField label="Rent-Free (months)" value={f.rf} onChange={S("rf")} />
+              </div>
 
-                <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
-                  <div className="font-bold text-lg">Headline Rent</div>
-                  <div className="text-lg font-extrabold tracking-tight text-gray-900">
-                    {F(rent, 2)} €/sqm
-                  </div>
+              {/* Fit-Out block */}
+              <div className="border rounded-md p-3">
+                <div className="flex flex-wrap items-center gap-4 mb-3">
+                  <span className="text-gray-700 font-medium">Fit-Out Input:</span>
+                  <label className="inline-flex items-center gap-2">
+                    <input type="radio" checked={f.fitMode === "perNLA"} onChange={() => S("fitMode")("perNLA")} />
+                    <span>€/sqm (NLA)</span>
+                  </label>
+                  <label className="inline-flex items-center gap-2">
+                    <input type="radio" checked={f.fitMode === "perGLA"} onChange={() => S("fitMode")("perGLA")} />
+                    <span>€/sqm (GLA)</span>
+                  </label>
+                  <label className="inline-flex items-center gap-2">
+                    <input type="radio" checked={f.fitMode === "total"} onChange={() => S("fitMode")("total")} />
+                    <span>Total (€)</span>
+                  </label>
                 </div>
-
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3">
-                  <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
-                  <div>Total Rent Frees</div><div className="text-right"><Money value={-totalRentFrees} /></div>
-                  <div>Total Agent Fees</div><div className="text-right"><Money value={-totalAgentFees} /></div>
-                  <div>Unforeseen Costs</div><div className="text-right"><Money value={-totalUnforeseen} /></div>
+                <div className="space-y-3">
+                  <NumericField label="Fit-Out €/sqm (NLA)" value={f.fitPerNLA} onChange={S("fitPerNLA")} readOnly={f.fitMode !== "perNLA"} suffix="€/sqm" />
+                  <NumericField label="Fit-Out €/sqm (GLA)" value={f.fitPerGLA} onChange={S("fitPerGLA")} readOnly={f.fitMode !== "perGLA"} suffix="€/sqm" />
+                  <NumericField label="Fit-Out Total (€)" value={f.fitTot} onChange={S("fitTot")} readOnly={f.fitMode !== "total"} suffix="€" />
                 </div>
+              </div>
 
-                <p className="text-sm font-semibold text-red-500 mb-1">
-                  Total Fit Out Costs: {FCUR(totalFit)}
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
+                <NumericField label="Unforeseen Costs (lump sum €)" value={f.unforeseen} onChange={S("unforeseen")} suffix="€" />
+              </div>
+            </div>
 
-                <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €/sqm</b><Delta base={rent} val={ner1} /></p>
-                <p>2️⃣ incl. Rent Frees & Fit-Outs: <b>{F(ner2, 2)} €/sqm</b><Delta base={rent} val={ner2} /></p>
-                <p>3️⃣ incl. Rent Frees, Fit-Outs & Agent Fees: <b>{F(ner3, 2)} €/sqm</b><Delta base={rent} val={ner3} /></p>
+            {/* RIGHT: Results (Restored from your original code) */}
+            <div className="md:sticky md:top-6 h-fit">
+              <div className="rounded-lg border p-4 space-y-2 bg-white">
+                <div ref={resultsContentRef}>
+                  {f.tenant.trim() && (
+                    <div className="mb-3">
+                      <span className="text-xl font-bold">
+                        Tenant: <u>{f.tenant.trim()}</u>
+                      </span>
+                    </div>
+                  )}
 
-                {/* Charts */}
-                <div className="mt-2 grid grid-cols-3 gap-6">
-                  <div className="h-60 p-2 col-span-1">
-                    <div className="text-sm font-bold text-center mb-1">Total Fit-Outs</div>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={[{ name: "Fit-Outs", eur: totalFit }]} margin={{ top: 8, right: 0, bottom: Math.max(0, BASE_B + FIT_EXTRA), left: 0 }}>
-                        <XAxis dataKey="name" tick={false} axisLine={false} tickLine={false} />
-                        <YAxis hide />
-                        <Tooltip formatter={(v) => FCUR0(v)} />
-                        <Bar dataKey="eur" fill="#D9D9D9" barSize={40} isAnimationActive={!isExporting}>
-                          <LabelList content={<VerticalMoneyLabel0 />} />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                  <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
+                    <div className="font-bold text-lg">Headline Rent</div>
+                    <div className="text-lg font-extrabold tracking-tight text-gray-900">
+                      {F(rent, 2)} €/sqm
+                    </div>
                   </div>
 
-                  <div className="h-64 p-2 col-span-2">
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-sm font-bold">
-                        {viewMode === "bars" ? "NER vs Headline (€/sqm)" : "Waterfall (€/sqm)"}
-                      </div>
-                      <div className="text-xs">
-                        <label className="mr-2">
-                          <input type="radio" checked={viewMode === "bars"} onChange={() => setViewMode("bars")} /> Bars
-                        </label>
-                        <label>
-                          <input type="radio" checked={viewMode === "waterfall"} onChange={() => setViewMode("waterfall")} /> Waterfall
-                        </label>
-                      </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3">
+                    <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
+                    <div>Total Rent Frees</div><div className="text-right"><Money value={-totalRentFrees} /></div>
+                    <div>Total Agent Fees</div><div className="text-right"><Money value={-totalAgentFees} /></div>
+                    <div>Unforeseen Costs</div><div className="text-right"><Money value={-totalUnforeseen} /></div>
+                  </div>
+
+                  <p className="text-sm font-semibold text-red-500 mb-1">
+                    Total Fit Out Costs: {FCUR(totalFit)}
+                  </p>
+
+                  <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €/sqm</b><Delta base={rent} val={ner1} /></p>
+                  <p>2️⃣ incl. Rent Frees & Fit-Outs: <b>{F(ner2, 2)} €/sqm</b><Delta base={rent} val={ner2} /></p>
+                  <p>3️⃣ incl. Rent Frees, Fit-Outs & Agent Fees: <b>{F(ner3, 2)} €/sqm</b><Delta base={rent} val={ner3} /></p>
+
+                  <div className="mt-2 grid grid-cols-3 gap-6">
+                    <div className="h-60 p-2 col-span-1">
+                      <div className="text-sm font-bold text-center mb-1">Total Fit-Outs</div>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[{ name: "Fit-Outs", eur: totalFit }]} margin={{ top: 8, right: 0, bottom: Math.max(0, BASE_B + FIT_EXTRA), left: 0 }}>
+                          <XAxis dataKey="name" tick={false} axisLine={false} tickLine={false} />
+                          <YAxis hide />
+                          <Tooltip formatter={(v) => FCUR0(v)} />
+                          <Bar dataKey="eur" fill="#D9D9D9" barSize={40} isAnimationActive={!isExporting}>
+                            <LabelList content={<VerticalMoneyLabel0 />} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
 
-                    {viewMode === "bars"
-                      ? <BarsChart data={nerBars} isExporting={isExporting} />
-                      : <WaterfallChart data={wfData} isExporting={isExporting} />
-                    }
-                  </div>
-                </div>
+                    <div className="h-64 p-2 col-span-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-sm font-bold">
+                          {viewMode === "bars" ? "NER vs Headline (€/sqm)" : "Waterfall (€/sqm)"}
+                        </div>
+                        <div className="text-xs">
+                          <label className="mr-2">
+                            <input type="radio" checked={viewMode === "bars"} onChange={() => setViewMode("bars")} /> Bars
+                          </label>
+                          <label>
+                            <input type="radio" checked={viewMode === "waterfall"} onChange={() => setViewMode("waterfall")} /> Waterfall
+                          </label>
+                        </div>
+                      </div>
 
-                <div className="mt-4 border-t pt-3">
-                  <div className="mt-3 rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-                    <div className="text-sky-700 font-extrabold text-base">🏁 Final NER</div>
-                    <div className="text-2xl font-extrabold tracking-tight text-gray-900">{F(ner4, 2)} €/sqm</div>
-                    <div className="ml-4 text-sm"><Delta base={rent} val={ner4} /></div>
+                      {viewMode === "bars"
+                        ? <BarsChart data={nerBars} isExporting={isExporting} />
+                        : <WaterfallChart data={wfData} isExporting={isExporting} />
+                      }
+                    </div>
+                  </div>
+
+                  <div className="mt-4 border-t pt-3">
+                    <div className="mt-3 rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+                      <div className="text-sky-700 font-extrabold text-base">🏁 Final NER</div>
+                      <div className="text-2xl font-extrabold tracking-tight text-gray-900">{F(ner4, 2)} €/sqm</div>
+                      <div className="ml-4 text-sm"><Delta base={rent} val={ner4} /></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> 
+        {/* END OF EXPORT WRAPPER */}
 
         {/* ===== SCENARIO COMPARISON TABLE ===== */}
         <div className="mt-6 border rounded-lg overflow-hidden">
@@ -714,4 +717,3 @@ export default function App() {
       </div>
     </div>
   );
-}
