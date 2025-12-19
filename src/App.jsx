@@ -701,7 +701,8 @@ return (
           </tr>
         </tbody>
       </table>
-    </div>
-  </div> // Dies schließt den Wrapper um das Grid und die Tabelle
+    </div> {/* Schließt Tabelle Wrapper */}
+  </div> {/* Schließt Haupt-Content/Grid Wrapper */}
+</div> {/* Schließt den allerersten Main-Wrapper der Seite */}
 );
 }
