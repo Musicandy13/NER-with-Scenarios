@@ -704,7 +704,8 @@ return (
               </tbody>
             </table>
           </div>
-        </div> {/* Schließt Haupt-Container der Seite */}
-      </div> {/* Schließt das div, das ref={fullContentRef} hält (falls vorhanden) */}
-    );
+        </div> {/* Schließt calculatorRef */}
+      </div> {/* Schließt pageRef */}
+    </div> 
+  );
 }
