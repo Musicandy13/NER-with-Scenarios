@@ -630,6 +630,7 @@ return (
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
+              {/* Headline Rent */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Headline Rent (€/sqm)</td>
                 <td className="border p-2 text-right font-bold">{F(rent, 2)}</td>
@@ -639,6 +640,8 @@ return (
                   </td>
                 ))}
               </tr>
+
+              {/* Lease Term */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Lease Term (months)</td>
                 <td className="border p-2 text-right">{f.duration}</td>
@@ -648,6 +651,8 @@ return (
                   </td>
                 ))}
               </tr>
+
+              {/* Rent-Free */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
                 <td className="border p-2 text-right text-red-600">-{f.rf}</td>
@@ -657,8 +662,8 @@ return (
                   </td>
                 ))}
               </tr>
-              <tr>
-                {/* Fit-Out Zeile: Jetzt pro m² NLA */}
+
+              {/* Fit-Out */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
                 <td className="border p-2 text-right text-red-600">-{F(perNLA, 2)}</td>
@@ -672,7 +677,7 @@ return (
                 ))}
               </tr>
 
-              {/* Agent Fees Zeile */}
+              {/* Agent Fees */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
                 <td className="border p-2 text-right text-red-600">-{f.agent}</td>
@@ -683,7 +688,7 @@ return (
                 ))}
               </tr>
 
-              {/* Unforeseen Zeile: Jetzt mit f.unforeseen Verknüpfung */}
+              {/* Unforeseen */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
                 <td className="border p-2 text-right text-red-600">-{FCUR0(P(f.unforeseen))}</td>
@@ -696,6 +701,8 @@ return (
                   </td>
                 ))}
               </tr>
+
+              {/* Final NER Result Row */}
               <tr className="bg-blue-600 text-white font-bold text-lg">
                 <td className="border p-3">FINAL NER (€/sqm)</td>
                 <td className="border p-3 text-right ring-2 ring-white ring-inset">{F(ner4, 2)}</td>
