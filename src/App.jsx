@@ -572,35 +572,37 @@ return (
                     <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
                   </div>
 
-                 {/* CHARTS SECTION */}
-<div className="mt-4 grid grid-cols-3 gap-2 pt-4 border-t">
-  
-  {/* LINKER TEIL: Der schmale Fit-Out Balken (Original-Style) */}
-  <div className="h-48 col-span-1 flex flex-col items-center justify-end">
-    <div 
-      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
-      style={{ height: '80%' }} 
-    >
-      <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
-        FIT-OUT: {FCUR0(totalFit)}
-      </span>
-    </div>
-    <div className="text-[10px] font-bold text-gray-400 mt-1 uppercase">Total Fit-Out</div>
-  </div>
+                  {/* CHARTS */}
+                  <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4">
+                    <div className="h-48 col-span-1">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[{ name: "Fit-Out", eur: totalFit }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
+                          <XAxis dataKey="name" hide />
+                          <YAxis hide />
+                          <Tooltip formatter={(v) => FCUR0(v)} />
+                          <Bar dataKey="eur" fill="#94a3b8" isAnimationActive={!isExporting}>
+                            <LabelList content={<VerticalMoneyLabel0 />} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="h-48 col-span-2">
+                      <div className="flex justify-end gap-2 mb-1">
+                        <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
+                        <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                      </div>
+                      {viewMode === "bars" ? <BarsChart data={nerBars} isExporting={isExporting} /> : <WaterfallChart data={wfData} isExporting={isExporting} />}
+                    </div>
+                  </div>
 
-  {/* RECHTER TEIL: Das Haupt-Chart */}
-  <div className="h-48 col-span-2">
-    <div className="flex justify-end gap-2 mb-1">
-      <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200 font-bold' : ''}`}>Bars</button>
-      <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200 font-bold' : ''}`}>Waterfall</button>
-    </div>
-    {viewMode === "bars" ? (
-      <BarsChart data={nerBars} isExporting={isExporting} />
-    ) : (
-      <WaterfallChart data={wfData} isExporting={isExporting} />
-    )}
-  </div>
-</div>
+                  <div className="mt-4 border-t-2 border-dashed pt-3">
+                    <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+                      <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
+                      <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
+                      <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* BUTTONS - AUßERHALB DER PNG REFS */}
                 <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
