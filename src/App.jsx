@@ -702,6 +702,6 @@ return (
         </tbody>
       </table>
     </div>
-  </div> // Ende des Main Containers
+  </div> // Dies schließt den Wrapper um das Grid und die Tabelle
 );
-} // Ende der App Komponente
+}
