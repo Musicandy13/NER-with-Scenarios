@@ -173,6 +173,16 @@ const BarNumberLabel = ({ x, y, width, height, value }) => {
   );
 };
 
+const VerticalMoneyLabel0 = ({ x, y, width, height, value }) => {
+  if (!Number.isFinite(value)) return null;
+  const cx = x + width / 2, cy = y + height / 2;
+  return (
+    <text x={cx} y={cy} transform={`rotate(-90, ${cx}, ${cy})`} textAnchor="middle" dominantBaseline="middle" fill="#000000" fontSize={16} fontWeight="800">
+      {FCUR0(value)}
+    </text>
+  );
+};
+
 const makeWFLabelTop = (data, fixedY) => (props) => {
   const { x = 0, width = 0, index, value, payload } = props || {};
   const d = Array.isArray(data) && Number.isInteger(index) ? data[index] : {};
@@ -261,6 +271,7 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [viewMode, setViewMode] = useState("bars");
 
+  /* Scenarios */
   const [scenarios, setScenarios] = useState([
     { id: 2, overrides: {} },
     { id: 3, overrides: {} },
@@ -280,6 +291,7 @@ export default function App() {
     return v !== undefined ? v : f[key];
   };
 
+  /* URL Data Loading */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const data = params.get("data");
@@ -293,6 +305,7 @@ export default function App() {
     }
   }, []);
 
+  /* Calculations */
   const nla = clamp(P(f.nla));
   const addon = clamp(P(f.addon));
   const rent = clamp(P(f.rent));
@@ -309,6 +322,7 @@ export default function App() {
   const perGLA = clamp(P(f.fitPerGLA));
   const tot = clamp(P(f.fitTot));
 
+  /* Sync Fit-outs */
   useEffect(() => {
     const nNLA = clamp(P(f.fitPerNLA));
     const nGLA = clamp(P(f.fitPerGLA));
@@ -349,17 +363,23 @@ export default function App() {
     const nlaS = clamp(P(vals.nla ?? f.nla));
     const addonS = clamp(P(vals.addon ?? f.addon));
     const glaS = nlaS * (1 + addonS / 100);
+
     const rentS = clamp(P(vals.rent ?? f.rent));
     const durationS = Math.max(0, Math.floor(P(vals.duration ?? f.duration)));
     const rfS = clamp(P(vals.rf ?? f.rf));
     const agentS = clamp(P(vals.agent ?? f.agent));
     const unforeseenS = clamp(P(vals.unforeseen ?? f.unforeseen));
+
     const monthsS = Math.max(0, durationS - rfS);
     const grossS = rentS * glaS * monthsS;
+
+    // Fit-Out Logik: Wir erzwingen hier die Rechnung pro NLA für die Szenarien
     const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
     const fitS = perNLAS * nlaS; 
+    
     const agentFeesS = agentS * rentS * glaS;
     const denomS = Math.max(1e-9, durationS * glaS);
+
     return (grossS - fitS - agentFeesS - unforeseenS) / denomS;
   };
 
@@ -372,6 +392,7 @@ export default function App() {
     { label: "Final", val: ner4, pct: rent > 0 ? ((ner4 - rent) / rent) * 100 : null, color: NER_COLORS[3] },
   ].map((d) => ({ name: d.label, sqm: safe(d.val), pct: Number.isFinite(d.pct) ? d.pct : null, color: d.color }));
 
+  /* Waterfall Data */
   const dRF = safe(ner1 - rent);
   const dFO = safe(ner2 - ner1);
   const dAF = safe(ner3 - ner2);
@@ -386,7 +407,14 @@ export default function App() {
   wfData.push({ name: "UC", base: cur, delta: dUC, isTotal: false }); cur += dUC;
   wfData.push({ name: "Final NER", base: 0, delta: cur, isTotal: true });
 
+  const scenarioView = scenarios.map((sc) => {
+    const vals = { ...f, ...sc.overrides };
+    return { id: sc.id, ner: calcScenarioNER(vals) };
+  });
+
+  /* Exports */
   const pageRef = useRef(null);
+  const mainContentRef = useRef(null);
   const resultsContentRef = useRef(null);
   const calculatorRef = useRef(null);
 
@@ -427,9 +455,10 @@ export default function App() {
   };
 
   const exportFullPNG = async () => {
-    const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
-    await exportNode(calculatorRef.current, fname); 
-  };
+  const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
+  // Change pageRef.current to calculatorRef.current
+  await exportNode(calculatorRef.current, fname); 
+};
 
   const exportProjectHTML = () => {
     const data = encodeURIComponent(JSON.stringify(f));
@@ -444,16 +473,17 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  return (
+return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
         ref={pageRef}
         className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
         style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
       >
+        {/* EXPORT-BEREICH 1: Alles außer der großen Tabelle */}
         <div ref={calculatorRef}>
           {/* HEADER */}
-          <div>
+          <div ref={mainContentRef}>
             <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
               Net Effective Rent (NER) Calculator
             </h2>
@@ -485,6 +515,7 @@ export default function App() {
                 <NumericField label="Rent-Free (months)" value={f.rf} onChange={S("rf")} />
               </div>
 
+              {/* Fit-Out Block */}
               <div className="border rounded-md p-3 bg-gray-50/50">
                 <div className="flex flex-wrap items-center gap-4 mb-3">
                   <span className="text-gray-700 font-bold text-sm">Fit-Out Input:</span>
@@ -513,69 +544,67 @@ export default function App() {
 
             {/* RECHTS: RESULTS */}
             <div className="md:sticky md:top-6 h-fit">
-              <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm" ref={resultsContentRef}>
-                {f.tenant.trim() && (
-                  <div className="mb-3 border-b pb-1">
-                    <span className="text-xl font-bold text-gray-800">Tenant: <u>{f.tenant.trim()}</u></span>
+              <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm">
+                <div ref={resultsContentRef}>
+                  {f.tenant.trim() && (
+                    <div className="mb-3 border-b pb-1">
+                      <span className="text-xl font-bold text-gray-800">Tenant: <u>{f.tenant.trim()}</u></span>
+                    </div>
+                  )}
+
+                  <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
+                    <div className="font-bold text-lg text-blue-900">Headline Rent</div>
+                    <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
                   </div>
-                )}
 
-                <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
-                  <div className="font-bold text-lg text-blue-900">Headline Rent</div>
-                  <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
-                </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
+                    <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
+                    <div>Total Rent Frees</div><div className="text-right text-red-600"><Money value={-totalRentFrees} /></div>
+                    <div>Total Agent Fees</div><div className="text-right text-red-600"><Money value={-totalAgentFees} /></div>
+                    <div>Unforeseen Costs</div><div className="text-right text-red-600"><Money value={-totalUnforeseen} /></div>
+                  </div>
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
-                  <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
-                  <div>Total Rent Frees</div><div className="text-right text-red-600"><Money value={-totalRentFrees} /></div>
-                  <div>Total Agent Fees</div><div className="text-right text-red-600"><Money value={-totalAgentFees} /></div>
-                  <div>Unforeseen Costs</div><div className="text-right text-red-600"><Money value={-totalUnforeseen} /></div>
-                </div>
+                  <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
 
-                <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
+                  <div className="space-y-1 text-sm border-t pt-2">
+                    <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €</b> <Delta base={rent} val={ner1} /></p>
+                    <p>2️⃣ incl. Fit-Outs: <b>{F(ner2, 2)} €</b> <Delta base={rent} val={ner2} /></p>
+                    <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
+                  </div>
 
-                <div className="space-y-1 text-sm border-t pt-2">
-                  <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €</b> <Delta base={rent} val={ner1} /></p>
-                  <p>2️⃣ incl. Fit-Outs: <b>{F(ner2, 2)} €</b> <Delta base={rent} val={ner2} /></p>
-                  <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
-                </div>
-
-                {/* CHARTS SECTION */}
-                <div className="mt-4 grid grid-cols-3 gap-2 pt-4">
-                  <div className="h-48 col-span-1 flex flex-col items-center justify-end">
-                    <div 
-                      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
-                      style={{ height: '80%' }} 
-                    >
-                      <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
-                        FIT-OUT: {FCUR0(totalFit)}
-                      </span>
+                  {/* CHARTS */}
+                  <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4">
+                    <div className="h-48 col-span-1">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[{ name: "Fit-Out", eur: totalFit }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
+                          <XAxis dataKey="name" hide />
+                          <YAxis hide />
+                          <Tooltip formatter={(v) => FCUR0(v)} />
+                          <Bar dataKey="eur" fill="#94a3b8" isAnimationActive={!isExporting}>
+                            <LabelList content={<VerticalMoneyLabel0 />} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="h-48 col-span-2">
+                      <div className="flex justify-end gap-2 mb-1">
+                        <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
+                        <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                      </div>
+                      {viewMode === "bars" ? <BarsChart data={nerBars} isExporting={isExporting} /> : <WaterfallChart data={wfData} isExporting={isExporting} />}
                     </div>
                   </div>
 
-                  <div className="h-48 col-span-2">
-                    <div className="flex justify-end gap-2 mb-1">
-                      <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
-                      <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                  <div className="mt-4 border-t-2 border-dashed pt-3">
+                    <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+                      <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
+                      <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
+                      <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
                     </div>
-                    {viewMode === "bars" ? (
-                      <BarsChart data={nerBars} isExporting={isExporting} />
-                    ) : (
-                      <WaterfallChart data={wfData} isExporting={isExporting} />
-                    )}
                   </div>
                 </div>
 
-                {/* FINALE BOX */}
-                <div className="mt-4 pt-3">
-                  <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-                    <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-                    <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-                    <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
-                  </div>
-                </div>
-
-                {/* EXPORT BUTTONS */}
+                {/* BUTTONS - AUßERHALB DER PNG REFS */}
                 <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
                   <div className="flex gap-2">
                     <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Results PNG</button>
@@ -588,16 +617,28 @@ export default function App() {
           </div>
         </div>
 
-        {/* TABELLE */}
+      {/* TABELLE - AUßERHALB DER PNG REFS */}
         <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
           <table className="w-full text-sm border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-gray-100 text-gray-700">
                 <th className="border p-2 text-left w-1/3 text-xs uppercase tracking-wider">Parameters</th>
                 <th className="border p-2 text-center bg-gray-200/50">Current</th>
-                <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>Scenario 2</th>
-                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>Scenario 3</th>
-                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>Scenario 4</th>
+                
+                {/* Scenario 2 Header */}
+                <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>
+                  Scenario 2
+                </th>
+                
+                {/* Scenario 3 Header */}
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>
+                  Scenario 3
+                </th>
+                
+                {/* Scenario 4 Header */}
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>
+                  Scenario 4
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -619,7 +660,56 @@ export default function App() {
                   </td>
                 ))}
               </tr>
-              {/* Weitere Zeilen hier einfügen bei Bedarf... */}
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
+                <td className="border p-2 text-right">{f.rf}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
+                <td className="border p-2 text-right">{F(perNLA, 2)}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
+                <td className="border p-2 text-right">{f.agent}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
+                <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
+                  </td>
+                ))}
+              </tr>
+
+              {/* FINAL NER ZEILE */}
+              <tr className="bg-blue-600 text-white font-bold text-lg">
+                <td className="border p-3">FINAL NER (€/sqm)</td>
+                <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
+                  {F(ner4, 2)}
+                </td>
+                {scenarioView.map((s) => (
+                  <td key={s.id} 
+                      className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
+                    {F(s.ner, 2)}
+                  </td>
+                ))}
+              </tr>
             </tbody>
           </table>
         </div>
