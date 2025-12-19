@@ -572,56 +572,84 @@ return (
                     <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
                   </div>
 
-                {/* CHARTS */}
-            <div className="mt-4 grid grid-cols-3 gap-2 pt-4">
-              {/* FIT-OUT BALKEN - Grundlinie angepasst */}
-              <div className="h-48 col-span-1 flex flex-col items-center justify-end">
-                <div 
-                  className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
-                  style={{ height: '80%' }} 
-                >
-                  <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
-                    FIT-OUT: {FCUR0(totalFit)}
-                  </span>
-                </div>
-                {/* Wort INVESTMENT wurde hier entfernt */}
-              </div>
-
-              {/* RECHTE SEITE: NER BARS */}
-              <div className="h-48 col-span-2">
-                <div className="flex justify-end gap-2 mb-1">
-                  <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
-                  <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
-                </div>
-                {viewMode === "bars" ? (
-                  <BarsChart data={nerBars} isExporting={isExporting} />
-                ) : (
-                  <WaterfallChart data={wfData} isExporting={isExporting} />
+             {/* RECHTS: RESULTS */}
+            <div className="md:sticky md:top-6 h-fit">
+              <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm" ref={resultsContentRef}>
+                {f.tenant.trim() && (
+                  <div className="mb-3 border-b pb-1">
+                    <span className="text-xl font-bold text-gray-800">Tenant: <u>{f.tenant.trim()}</u></span>
+                  </div>
                 )}
-              </div>
-            </div>
 
-            {/* FINALE BOX OHNE GESTRICHELTE LINIE DARÜBER */}
-            <div className="mt-4 pt-3">
-              <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-                <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-                <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-                <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
-              </div>
-            </div>
+                <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
+                  <div className="font-bold text-lg text-blue-900">Headline Rent</div>
+                  <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
+                </div>
 
-            {/* EXPORT BUTTONS */}
-            <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
-              <div className="flex gap-2">
-                <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Results PNG</button>
-                <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Full PNG</button>
-              </div>
-              <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold transition-colors shadow-sm">Save Project File</button>
-            </div>
-          </div> {/* Ende rechter Spalten-Content */}
-        </div> {/* Ende Main Grid (md:grid-cols-2) */}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
+                  <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
+                  <div>Total Rent Frees</div><div className="text-right text-red-600"><Money value={-totalRentFrees} /></div>
+                  <div>Total Agent Fees</div><div className="text-right text-red-600"><Money value={-totalAgentFees} /></div>
+                  <div>Unforeseen Costs</div><div className="text-right text-red-600"><Money value={-totalUnforeseen} /></div>
+                </div>
 
-        {/* TABELLE - UNTERHALB DES GRIDS */}
+                <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
+
+                <div className="space-y-1 text-sm border-t pt-2">
+                  <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €</b> <Delta base={rent} val={ner1} /></p>
+                  <p>2️⃣ incl. Fit-Outs: <b>{F(ner2, 2)} €</b> <Delta base={rent} val={ner2} /></p>
+                  <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
+                </div>
+
+                {/* CHARTS SECTION */}
+                <div className="mt-4 grid grid-cols-3 gap-2 pt-4">
+                  <div className="h-48 col-span-1 flex flex-col items-center justify-end">
+                    <div 
+                      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
+                      style={{ height: '80%' }} 
+                    >
+                      <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
+                        FIT-OUT: {FCUR0(totalFit)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="h-48 col-span-2">
+                    <div className="flex justify-end gap-2 mb-1">
+                      <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
+                      <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                    </div>
+                    {viewMode === "bars" ? (
+                      <BarsChart data={nerBars} isExporting={isExporting} />
+                    ) : (
+                      <WaterfallChart data={wfData} isExporting={isExporting} />
+                    )}
+                  </div>
+                </div>
+
+                {/* FINALE BOX */}
+                <div className="mt-4 pt-3">
+                  <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+                    <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
+                    <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
+                    <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
+                  </div>
+                </div>
+
+                {/* EXPORT BUTTONS */}
+                <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
+                  <div className="flex gap-2">
+                    <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Results PNG</button>
+                    <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Full PNG</button>
+                  </div>
+                  <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold transition-colors shadow-sm">Save Project File</button>
+                </div>
+              </div> {/* Ende resultsContentRef box */}
+            </div> {/* Ende rechte Spalte sticky wrapper */}
+          </div> {/* Ende Main Grid (md:grid-cols-2) */}
+        </div> {/* Ende calculatorRef (Export Bereich 1) */}
+
+        {/* TABELLE - UNTERHALB DES GRIDS (Außerhalb von calculatorRef) */}
         <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
           <table className="w-full text-sm border-collapse min-w-[600px]">
             <thead>
@@ -702,7 +730,9 @@ return (
             </tbody>
           </table>
         </div>
-      </div> {/* Schließt calculatorRef */}
-    </div> 
+      </div> {/* Schließt pageRef */}
+    </div> {/* Schließt blauen Hintergrund-Div */}
   );
 }
+
+export default App;
