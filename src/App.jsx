@@ -572,148 +572,137 @@ return (
                     <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
                   </div>
 
-                 {/* CHARTS */}
-<div className="mt-4 grid grid-cols-3 gap-2 pt-4">
-  {/* FIT-OUT BALKEN - Jetzt auf gleicher Grundlinie (Baseline) wie die anderen */}
-  <div className="h-48 col-span-1 flex flex-col items-center justify-end">
-    <div 
-      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
-      style={{ height: '80%' }} 
-    >
-      <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
-        FIT-OUT: {FCUR0(totalFit)}
-      </span>
-    </div>
-    {/* INVESTMENT TEXT ENTFERNT */}
-  </div>
-
-  {/* RECHTE SEITE: NER BARS - KEINE ÄNDERUNG */}
-  <div className="h-48 col-span-2">
-    <div className="flex justify-end gap-2 mb-1">
-      <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
-      <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
-    </div>
-    {viewMode === "bars" ? (
-      <BarsChart data={nerBars} isExporting={isExporting} />
-    ) : (
-      <WaterfallChart data={wfData} isExporting={isExporting} />
-    )}
-  </div>
-</div>
-
-{/* FINALE BOX OHNE GESTRICHELTE LINIE DARÜBER */}
-<div className="mt-4 pt-3">
-  <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-    <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-    <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-    <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
-  </div>
-</div>
-
-{/* Die gepunktete Linie (border-t-2 border-dashed) wurde hier entfernt */}
-<div className="mt-4 pt-3">
-  <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-    <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-    <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-    <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
-  </div>
-</div>
-
-                {/* EXPORT BUTTONS */}
-                <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
-                  <div className="flex gap-2">
-                    <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Results PNG</button>
-                    <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Full PNG</button>
-                  </div>
-                  <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold transition-colors shadow-sm">Save Project File</button>
+                {/* CHARTS */}
+            <div className="mt-4 grid grid-cols-3 gap-2 pt-4">
+              {/* FIT-OUT BALKEN - Grundlinie angepasst */}
+              <div className="h-48 col-span-1 flex flex-col items-center justify-end">
+                <div 
+                  className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
+                  style={{ height: '80%' }} 
+                >
+                  <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
+                    FIT-OUT: {FCUR0(totalFit)}
+                  </span>
                 </div>
+                {/* Wort INVESTMENT wurde hier entfernt */}
+              </div>
+
+              {/* RECHTE SEITE: NER BARS */}
+              <div className="h-48 col-span-2">
+                <div className="flex justify-end gap-2 mb-1">
+                  <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
+                  <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                </div>
+                {viewMode === "bars" ? (
+                  <BarsChart data={nerBars} isExporting={isExporting} />
+                ) : (
+                  <WaterfallChart data={wfData} isExporting={isExporting} />
+                )}
               </div>
             </div>
-          </div> {/* Ende Main Grid (md:grid-cols-2) */}
 
-          {/* TABELLE - UNTERHALB DES GRIDS */}
-          <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
-            <table className="w-full text-sm border-collapse min-w-[600px]">
-              <thead>
-                <tr className="bg-gray-100 text-gray-700">
-                  <th className="border p-2 text-left w-1/3 text-xs uppercase tracking-wider">Parameters</th>
-                  <th className="border p-2 text-center bg-gray-200/50">Current</th>
-                  <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>Scenario 2</th>
-                  <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>Scenario 3</th>
-                  <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>Scenario 4</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50">Headline Rent (€/sqm)</td>
-                  <td className="border p-2 text-right font-bold">{F(rent, 2)}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "rent")} onChange={(v) => setScenarioVal(sc.id, "rent", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50">Lease Term (months)</td>
-                  <td className="border p-2 text-right">{f.duration}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "duration")} onChange={(v) => setScenarioVal(sc.id, "duration", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
-                  <td className="border p-2 text-right">{f.rf}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
-                  <td className="border p-2 text-right">{F(perNLA, 2)}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
-                  <td className="border p-2 text-right">{f.agent}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
-                  <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
-                  {scenarios.map((sc) => (
-                    <td key={sc.id} className="border p-1">
-                      <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
-                    </td>
-                  ))}
-                </tr>
-                <tr className="bg-blue-600 text-white font-bold text-lg">
-                  <td className="border p-3">FINAL NER (€/sqm)</td>
-                  <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
-                    {F(ner4, 2)}
+            {/* FINALE BOX OHNE GESTRICHELTE LINIE DARÜBER */}
+            <div className="mt-4 pt-3">
+              <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+                <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
+                <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
+                <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
+              </div>
+            </div>
+
+            {/* EXPORT BUTTONS */}
+            <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
+              <div className="flex gap-2">
+                <button onClick={exportResultsPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Results PNG</button>
+                <button onClick={exportFullPNG} className="flex-1 px-3 py-2 rounded border bg-gray-50 hover:bg-gray-100 text-xs font-bold transition-colors">Export Full PNG</button>
+              </div>
+              <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold transition-colors shadow-sm">Save Project File</button>
+            </div>
+          </div> {/* Ende rechter Spalten-Content */}
+        </div> {/* Ende Main Grid (md:grid-cols-2) */}
+
+        {/* TABELLE - UNTERHALB DES GRIDS */}
+        <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
+          <table className="w-full text-sm border-collapse min-w-[600px]">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700">
+                <th className="border p-2 text-left w-1/3 text-xs uppercase tracking-wider">Parameters</th>
+                <th className="border p-2 text-center bg-gray-200/50">Current</th>
+                <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>Scenario 2</th>
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>Scenario 3</th>
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>Scenario 4</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Headline Rent (€/sqm)</td>
+                <td className="border p-2 text-right font-bold">{F(rent, 2)}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "rent")} onChange={(v) => setScenarioVal(sc.id, "rent", v)} />
                   </td>
-                  {scenarioView.map((s) => (
-                    <td key={s.id} className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
-                      {F(s.ner, 2)}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div> {/* Schließt calculatorRef */}
-      </div> {/* Schließt pageRef */}
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Lease Term (months)</td>
+                <td className="border p-2 text-right">{f.duration}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "duration")} onChange={(v) => setScenarioVal(sc.id, "duration", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
+                <td className="border p-2 text-right">{f.rf}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
+                <td className="border p-2 text-right">{F(P(f.fitPerNLA), 2)}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
+                <td className="border p-2 text-right">{f.agent}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
+                <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
+                {scenarios.map((sc) => (
+                  <td key={sc.id} className="border p-1">
+                    <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
+                  </td>
+                ))}
+              </tr>
+              <tr className="bg-blue-600 text-white font-bold text-lg">
+                <td className="border p-3">FINAL NER (€/sqm)</td>
+                <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
+                  {F(ner4, 2)}
+                </td>
+                {scenarioView.map((s) => (
+                  <td key={s.id} className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
+                    {F(s.ner, 2)}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div> {/* Schließt calculatorRef */}
     </div> 
   );
 }
