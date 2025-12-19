@@ -734,5 +734,3 @@ return (
     </div> {/* Schließt blauen Hintergrund-Div */}
   );
 }
-
-export default App;
