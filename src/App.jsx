@@ -572,26 +572,32 @@ return (
                     <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
                   </div>
 
-                  {/* CHARTS */}
+                 {/* CHARTS SECTION */}
                   <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4">
-                    <div className="h-48 col-span-1">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={[{ name: "Fit-Out", eur: totalFit }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
-                          <XAxis dataKey="name" hide />
-                          <YAxis hide />
-                          <Tooltip formatter={(v) => FCUR0(v)} />
-                          <Bar dataKey="eur" fill="#94a3b8" isAnimationActive={!isExporting}>
-                            <LabelList content={<VerticalMoneyLabel0 />} />
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    {/* LINKER TEIL: Der schmale Fit-Out Balken (Original-Style aus 'alt') */}
+                    <div className="h-48 col-span-1 flex flex-col items-center justify-end">
+                      <div 
+                        className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
+                        style={{ height: '80%' }} 
+                      >
+                        <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
+                          FIT-OUT: {FCUR0(totalFit)}
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-bold text-gray-400 mt-1 uppercase text-center">Total Fit-Out</div>
                     </div>
+
+                    {/* RECHTER TEIL: Das Haupt-Chart */}
                     <div className="h-48 col-span-2">
                       <div className="flex justify-end gap-2 mb-1">
-                        <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
-                        <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
+                        <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200 font-bold' : ''}`}>Bars</button>
+                        <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200 font-bold' : ''}`}>Waterfall</button>
                       </div>
-                      {viewMode === "bars" ? <BarsChart data={nerBars} isExporting={isExporting} /> : <WaterfallChart data={wfData} isExporting={isExporting} />}
+                      {viewMode === "bars" ? (
+                        <BarsChart data={nerBars} isExporting={isExporting} />
+                      ) : (
+                        <WaterfallChart data={wfData} isExporting={isExporting} />
+                      )}
                     </div>
                   </div>
 
@@ -617,28 +623,16 @@ return (
           </div>
         </div>
 
-      {/* TABELLE - AUßERHALB DER PNG REFS */}
+        {/* TABELLE - AUßERHALB DER PNG REFS */}
         <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
           <table className="w-full text-sm border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-gray-100 text-gray-700">
                 <th className="border p-2 text-left w-1/3 text-xs uppercase tracking-wider">Parameters</th>
                 <th className="border p-2 text-center bg-gray-200/50">Current</th>
-                
-                {/* Scenario 2 Header */}
-                <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>
-                  Scenario 2
-                </th>
-                
-                {/* Scenario 3 Header */}
-                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>
-                  Scenario 3
-                </th>
-                
-                {/* Scenario 4 Header */}
-                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>
-                  Scenario 4
-                </th>
+                <th className="border p-2 text-center text-black" style={{ backgroundColor: '#DAE9F8' }}>Scenario 2</th>
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#4D93D9' }}>Scenario 3</th>
+                <th className="border p-2 text-center text-white" style={{ backgroundColor: '#215C98' }}>Scenario 4</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -696,18 +690,11 @@ return (
                   </td>
                 ))}
               </tr>
-
-              {/* FINAL NER ZEILE */}
-              <tr className="bg-blue-600 text-white font-bold text-lg">
-                <td className="border p-3">FINAL NER (€/sqm)</td>
-                <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
-                  {F(ner4, 2)}
-                </td>
-                {scenarioView.map((s) => (
-                  <td key={s.id} 
-                      className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
-                    {F(s.ner, 2)}
-                  </td>
+              <tr className="bg-gray-50 font-bold">
+                <td className="border p-2">Final NER (€/sqm)</td>
+                <td className="border p-2 text-right text-blue-700">{F(ner4, 2)}</td>
+                {scenarioView.map((sv) => (
+                  <td key={sv.id} className="border p-2 text-right text-blue-700">{F(sv.ner, 2)}</td>
                 ))}
               </tr>
             </tbody>
