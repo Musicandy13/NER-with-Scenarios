@@ -373,12 +373,10 @@ export default function App() {
     const monthsS = Math.max(0, durationS - rfS);
     const grossS = rentS * glaS * monthsS;
 
-    const modeS = vals.fitMode ?? f.fitMode;
+    // Fit-Out Logik: Wir erzwingen hier die Rechnung pro NLA für die Szenarien
     const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
-    const perGLAS = clamp(P(vals.fitPerGLA ?? f.fitPerGLA));
-    const totalS = clamp(P(vals.fitTot ?? f.fitTot));
-
-    const fitS = modeS === "perNLA" ? perNLAS * nlaS : modeS === "perGLA" ? perGLAS * glaS : totalS;
+    const fitS = perNLAS * nlaS; 
+    
     const agentFeesS = agentS * rentS * glaS;
     const denomS = Math.max(1e-9, durationS * glaS);
 
