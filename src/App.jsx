@@ -580,7 +580,7 @@ return (
                           <XAxis dataKey="name" hide />
                           <YAxis hide />
                           <Tooltip formatter={(v) => FCUR0(v)} />
-                         <Bar dataKey="eur" fill="#94a3b8" barSize={20} isAnimationActive={!isExporting}>
+                         <Bar dataKey="eur" fill="#94a3b8" barSize={50} isAnimationActive={!isExporting}>
                             <LabelList content={<VerticalMoneyLabel0 />} />
                           </Bar>
                         </BarChart>
