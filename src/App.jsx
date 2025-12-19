@@ -173,16 +173,6 @@ const BarNumberLabel = ({ x, y, width, height, value }) => {
   );
 };
 
-const VerticalMoneyLabel0 = ({ x, y, width, height, value }) => {
-  if (!Number.isFinite(value)) return null;
-  const cx = x + width / 2, cy = y + height / 2;
-  return (
-    <text x={cx} y={cy} transform={`rotate(-90, ${cx}, ${cy})`} textAnchor="middle" dominantBaseline="middle" fill="#000000" fontSize={16} fontWeight="800">
-      {FCUR0(value)}
-    </text>
-  );
-};
-
 const makeWFLabelTop = (data, fixedY) => (props) => {
   const { x = 0, width = 0, index, value, payload } = props || {};
   const d = Array.isArray(data) && Number.isInteger(index) ? data[index] : {};
@@ -271,7 +261,6 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [viewMode, setViewMode] = useState("bars");
 
-  /* Scenarios */
   const [scenarios, setScenarios] = useState([
     { id: 2, overrides: {} },
     { id: 3, overrides: {} },
@@ -291,7 +280,6 @@ export default function App() {
     return v !== undefined ? v : f[key];
   };
 
-  /* URL Data Loading */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const data = params.get("data");
@@ -305,7 +293,6 @@ export default function App() {
     }
   }, []);
 
-  /* Calculations */
   const nla = clamp(P(f.nla));
   const addon = clamp(P(f.addon));
   const rent = clamp(P(f.rent));
@@ -322,7 +309,6 @@ export default function App() {
   const perGLA = clamp(P(f.fitPerGLA));
   const tot = clamp(P(f.fitTot));
 
-  /* Sync Fit-outs */
   useEffect(() => {
     const nNLA = clamp(P(f.fitPerNLA));
     const nGLA = clamp(P(f.fitPerGLA));
@@ -363,23 +349,17 @@ export default function App() {
     const nlaS = clamp(P(vals.nla ?? f.nla));
     const addonS = clamp(P(vals.addon ?? f.addon));
     const glaS = nlaS * (1 + addonS / 100);
-
     const rentS = clamp(P(vals.rent ?? f.rent));
     const durationS = Math.max(0, Math.floor(P(vals.duration ?? f.duration)));
     const rfS = clamp(P(vals.rf ?? f.rf));
     const agentS = clamp(P(vals.agent ?? f.agent));
     const unforeseenS = clamp(P(vals.unforeseen ?? f.unforeseen));
-
     const monthsS = Math.max(0, durationS - rfS);
     const grossS = rentS * glaS * monthsS;
-
-    // Fit-Out Logik: Wir erzwingen hier die Rechnung pro NLA für die Szenarien
     const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
     const fitS = perNLAS * nlaS; 
-    
     const agentFeesS = agentS * rentS * glaS;
     const denomS = Math.max(1e-9, durationS * glaS);
-
     return (grossS - fitS - agentFeesS - unforeseenS) / denomS;
   };
 
@@ -392,7 +372,6 @@ export default function App() {
     { label: "Final", val: ner4, pct: rent > 0 ? ((ner4 - rent) / rent) * 100 : null, color: NER_COLORS[3] },
   ].map((d) => ({ name: d.label, sqm: safe(d.val), pct: Number.isFinite(d.pct) ? d.pct : null, color: d.color }));
 
-  /* Waterfall Data */
   const dRF = safe(ner1 - rent);
   const dFO = safe(ner2 - ner1);
   const dAF = safe(ner3 - ner2);
@@ -407,14 +386,7 @@ export default function App() {
   wfData.push({ name: "UC", base: cur, delta: dUC, isTotal: false }); cur += dUC;
   wfData.push({ name: "Final NER", base: 0, delta: cur, isTotal: true });
 
-  const scenarioView = scenarios.map((sc) => {
-    const vals = { ...f, ...sc.overrides };
-    return { id: sc.id, ner: calcScenarioNER(vals) };
-  });
-
-  /* Exports */
   const pageRef = useRef(null);
-  const mainContentRef = useRef(null);
   const resultsContentRef = useRef(null);
   const calculatorRef = useRef(null);
 
@@ -455,10 +427,9 @@ export default function App() {
   };
 
   const exportFullPNG = async () => {
-  const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
-  // Change pageRef.current to calculatorRef.current
-  await exportNode(calculatorRef.current, fname); 
-};
+    const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
+    await exportNode(calculatorRef.current, fname); 
+  };
 
   const exportProjectHTML = () => {
     const data = encodeURIComponent(JSON.stringify(f));
@@ -473,17 +444,16 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-return (
+  return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
         ref={pageRef}
         className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
         style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
       >
-        {/* EXPORT-BEREICH 1: Alles außer der großen Tabelle */}
         <div ref={calculatorRef}>
           {/* HEADER */}
-          <div ref={mainContentRef}>
+          <div>
             <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
               Net Effective Rent (NER) Calculator
             </h2>
@@ -515,7 +485,6 @@ return (
                 <NumericField label="Rent-Free (months)" value={f.rf} onChange={S("rf")} />
               </div>
 
-            {/* Fit-Out Block */}
               <div className="border rounded-md p-3 bg-gray-50/50">
                 <div className="flex flex-wrap items-center gap-4 mb-3">
                   <span className="text-gray-700 font-bold text-sm">Fit-Out Input:</span>
@@ -540,39 +509,9 @@ return (
                 <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
                 <NumericField label="Unforeseen (€)" value={f.unforeseen} onChange={S("unforeseen")} suffix="€" />
               </div>
-            </div> {/* ENDE LINKE SPALTE (INPUTS) */}
+            </div>
 
             {/* RECHTS: RESULTS */}
-            <div className="md:sticky md:top-6 h-fit">
-              <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm">
-                <div ref={resultsContentRef}>
-                  {f.tenant.trim() && (
-                    <div className="mb-3 border-b pb-1">
-                      <span className="text-xl font-bold text-gray-800">Tenant: <u>{f.tenant.trim()}</u></span>
-                    </div>
-                  )}
-
-                  <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
-                    <div className="font-bold text-lg text-blue-900">Headline Rent</div>
-                    <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
-                    <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
-                    <div>Total Rent Frees</div><div className="text-right text-red-600"><Money value={-totalRentFrees} /></div>
-                    <div>Total Agent Fees</div><div className="text-right text-red-600"><Money value={-totalAgentFees} /></div>
-                    <div>Unforeseen Costs</div><div className="text-right text-red-600"><Money value={-totalUnforeseen} /></div>
-                  </div>
-
-                  <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
-
-                  <div className="space-y-1 text-sm border-t pt-2">
-                    <p>1️⃣ NER incl. Rent Frees: <b>{F(ner1, 2)} €</b> <Delta base={rent} val={ner1} /></p>
-                    <p>2️⃣ incl. Fit-Outs: <b>{F(ner2, 2)} €</b> <Delta base={rent} val={ner2} /></p>
-                    <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
-                  </div>
-
-             {/* RECHTS: RESULTS */}
             <div className="md:sticky md:top-6 h-fit">
               <div className="rounded-lg border p-4 space-y-2 bg-white shadow-sm" ref={resultsContentRef}>
                 {f.tenant.trim() && (
@@ -644,12 +583,12 @@ return (
                   </div>
                   <button onClick={exportProjectHTML} className="w-full px-3 py-2 rounded border bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold transition-colors shadow-sm">Save Project File</button>
                 </div>
-              </div> {/* Ende resultsContentRef box */}
-            </div> {/* Ende rechte Spalte sticky wrapper */}
-          </div> {/* Ende Main Grid (md:grid-cols-2) */}
-        </div> {/* Ende calculatorRef (Export Bereich 1) */}
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* TABELLE - UNTERHALB DES GRIDS (Außerhalb von calculatorRef) */}
+        {/* TABELLE */}
         <div className="mt-8 border rounded-lg overflow-x-auto bg-white">
           <table className="w-full text-sm border-collapse min-w-[600px]">
             <thead>
@@ -680,57 +619,11 @@ return (
                   </td>
                 ))}
               </tr>
-              <tr>
-                <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
-                <td className="border p-2 text-right">{f.rf}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
-                <td className="border p-2 text-right">{F(P(f.fitPerNLA), 2)}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
-                <td className="border p-2 text-right">{f.agent}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
-                <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
-                  </td>
-                ))}
-              </tr>
-              <tr className="bg-blue-600 text-white font-bold text-lg">
-                <td className="border p-3">FINAL NER (€/sqm)</td>
-                <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
-                  {F(ner4, 2)}
-                </td>
-                {scenarioView.map((s) => (
-                  <td key={s.id} className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
-                    {F(s.ner, 2)}
-                  </td>
-                ))}
-              </tr>
+              {/* Weitere Zeilen hier einfügen bei Bedarf... */}
             </tbody>
           </table>
         </div>
-      </div> {/* Schließt pageRef */}
-    </div> {/* Schließt blauen Hintergrund-Div */}
+      </div>
+    </div>
   );
 }
