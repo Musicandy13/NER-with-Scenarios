@@ -572,22 +572,22 @@ return (
                     <p>3️⃣ incl. Agent Fees: <b>{F(ner3, 2)} €</b> <Delta base={rent} val={ner3} /></p>
                   </div>
 
-                  {/* CHARTS */}
+                 {/* CHARTS */}
 <div className="mt-4 grid grid-cols-3 gap-2 pt-4">
-  {/* FIT-OUT BALKEN - Jetzt auf gleicher Höhe wie die anderen */}
-  <div className="h-48 col-span-1 flex flex-col items-center justify-start">
+  {/* FIT-OUT BALKEN - Jetzt auf gleicher Grundlinie (Baseline) wie die anderen */}
+  <div className="h-48 col-span-1 flex flex-col items-center justify-end">
     <div 
-      className="w-16 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center relative transition-all"
-      style={{ height: '75%' }} /* Passt die Höhe an die Rent-Balken an */
+      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all mb-[22px]" 
+      style={{ height: '80%' }} 
     >
       <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
         FIT-OUT: {FCUR0(totalFit)}
       </span>
     </div>
-    {/* Wort "Investment" wurde hier entfernt */}
+    {/* INVESTMENT TEXT ENTFERNT */}
   </div>
 
-  {/* RECHTE SEITE: NER BARS */}
+  {/* RECHTE SEITE: NER BARS - KEINE ÄNDERUNG */}
   <div className="h-48 col-span-2">
     <div className="flex justify-end gap-2 mb-1">
       <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
@@ -601,7 +601,7 @@ return (
   </div>
 </div>
 
-{/* Die gepunktete Linie (border-t-2 border-dashed) wurde hier entfernt */}
+{/* FINALE BOX OHNE GESTRICHELTE LINIE DARÜBER */}
 <div className="mt-4 pt-3">
   <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
     <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
@@ -610,15 +610,14 @@ return (
   </div>
 </div>
 
-                  {/* FINAL NER BOX */}
-                  <div className="mt-4 border-t-2 border-dashed pt-3">
-                    <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-                      <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-                      <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-                      <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
-                    </div>
-                  </div>
-                </div> {/* Ende resultsContentRef */}
+{/* Die gepunktete Linie (border-t-2 border-dashed) wurde hier entfernt */}
+<div className="mt-4 pt-3">
+  <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
+    <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
+    <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
+    <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
+  </div>
+</div>
 
                 {/* EXPORT BUTTONS */}
                 <div className="flex flex-col gap-2 mt-6 pt-4 border-t">
