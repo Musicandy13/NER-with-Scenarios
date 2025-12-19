@@ -658,14 +658,21 @@ return (
                 ))}
               </tr>
               <tr>
-                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€ total)</td>
-                <td className="border p-2 text-right text-red-600">-{FCUR0(totalFit)}</td>
+                {/* Fit-Out Zeile: Jetzt pro m² NLA */}
+              <tr>
+                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
+                <td className="border p-2 text-right text-red-600">-{F(perNLA, 2)}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "fitTot")} onChange={(v) => setScenarioVal(sc.id, "fitTot", v)} />
+                    <ScenarioField 
+                      value={resolveScenario(sc, "fitPerNLA")} 
+                      onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} 
+                    />
                   </td>
                 ))}
               </tr>
+
+              {/* Agent Fees Zeile */}
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
                 <td className="border p-2 text-right text-red-600">-{f.agent}</td>
@@ -675,12 +682,17 @@ return (
                   </td>
                 ))}
               </tr>
+
+              {/* Unforeseen Zeile: Jetzt mit f.unforeseen Verknüpfung */}
               <tr>
-                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€)</td>
-                <td className="border p-2 text-right text-gray-400">-{FCUR0(f.unforeseen)}</td>
+                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
+                <td className="border p-2 text-right text-red-600">-{FCUR0(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
+                  <td key={sc.id} className="border p-1 text-red-600">
+                    <ScenarioField 
+                      value={resolveScenario(sc, "unforeseen")} 
+                      onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} 
+                    />
                   </td>
                 ))}
               </tr>
