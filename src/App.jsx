@@ -206,7 +206,7 @@ const makeWFLabelTop = (data, fixedY) => (props) => {
   );
 };
 
-/* ---------- CHARTS ---------- */
+/* ---------- Charts ---------- */
 function BarsChart({ data, isExporting }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
