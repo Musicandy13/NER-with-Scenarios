@@ -573,19 +573,24 @@ return (
                   </div>
 
                   {/* CHARTS */}
-                  <div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4">
-                    <div className="h-48 col-span-1">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={[{ name: "Fit-Out", eur: totalFit }]} margin={{ top: 20, right: 5, left: 5, bottom: 5 }}>
-                          <XAxis dataKey="name" hide />
-                          <YAxis hide />
-                          <Tooltip formatter={(v) => FCUR0(v)} />
-                          <Bar dataKey="eur" fill="#94a3b8" isAnimationActive={!isExporting}>
-                            <LabelList content={<VerticalMoneyLabel0 />} />
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
+<div className="mt-4 grid grid-cols-3 gap-2 border-t pt-4">
+  {/* ELEGANTER FIT-OUT INDIKATOR (Anstelle des klobigen Balkens) */}
+  <div className="h-48 col-span-1 flex flex-col items-center justify-end pb-2">
+    <div 
+      className="w-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-t-md flex items-center justify-center relative transition-all"
+      style={{ height: '80%' }} 
+    >
+      <span className="absolute -rotate-90 whitespace-nowrap text-gray-500 font-bold text-[11px] tracking-tight">
+        FIT-OUT: {FCUR0(totalFit)}
+      </span>
+    </div>
+    <span className="mt-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">Investment</span>
+  </div>
+
+  {/* RECHTE SEITE: NER BARS (Bleibt bestehen) */}
+  <div className="h-48 col-span-2">
+    <div className="flex justify-end gap-2 mb-1">
+      {/* ... Buttons und restlicher Chart Code ab Zeile 590 ... */}
                     <div className="h-48 col-span-2">
                       <div className="flex justify-end gap-2 mb-1">
                         <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
