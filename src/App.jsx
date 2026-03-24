@@ -141,7 +141,7 @@ function ScenarioField({ value, onChange, readOnly = false, bold = false }) {
       }}
       onBlur={(e) => {
         setFocus(false);
-        const n = clamp(P(e.target.value));
+        const n = P(e.target.value);
         onChange?.(String(n));
       }}
       onChange={(e) => onChange?.(e.target.value.replace(/[^\d.,-]/g, ""))}
@@ -273,10 +273,10 @@ export default function App() {
 
   /* Scenarios */
   const [scenarios, setScenarios] = useState([
-    { id: 2, overrides: {} },
-    { id: 3, overrides: {} },
-    { id: 4, overrides: {} },
-  ]);
+  { id: 2, overrides: {}, fitMode: null },
+  { id: 3, overrides: {}, fitMode: null },
+  { id: 4, overrides: {}, fitMode: null },
+]);
 
   const setScenarioVal = (id, key, value) => {
     setScenarios((arr) =>
@@ -286,10 +286,20 @@ export default function App() {
     );
   };
 
+  const setScenarioFitMode = (id, mode) => {
+  setScenarios((arr) =>
+    arr.map((sc) =>
+      sc.id === id ? { ...sc, fitMode: mode } : sc
+    )
+  );
+};
+
   const resolveScenario = (sc, key) => {
     const v = sc.overrides[key];
     return v !== undefined ? v : f[key];
   };
+
+  const resolveFitMode = (sc) => sc.fitMode ?? f.fitMode ?? "perNLA";
 
   /* URL Data Loading */
   useEffect(() => {
@@ -312,7 +322,7 @@ export default function App() {
   const duration = Math.max(0, Math.floor(P(f.duration)));
   const rf = clamp(P(f.rf));
   const agent = clamp(P(f.agent));
-  const unforeseen = clamp(P(f.unforeseen));
+  const unforeseen = P(f.unforeseen);
 
   const gla = useMemo(() => nla * (1 + addon / 100), [nla, addon]);
   const months = Math.max(0, duration - rf);
@@ -368,14 +378,25 @@ export default function App() {
     const durationS = Math.max(0, Math.floor(P(vals.duration ?? f.duration)));
     const rfS = clamp(P(vals.rf ?? f.rf));
     const agentS = clamp(P(vals.agent ?? f.agent));
-    const unforeseenS = clamp(P(vals.unforeseen ?? f.unforeseen));
+    const unforeseenS = P(vals.unforeseen ?? f.unforeseen);
 
     const monthsS = Math.max(0, durationS - rfS);
     const grossS = rentS * glaS * monthsS;
 
-    // Fit-Out Logik: Wir erzwingen hier die Rechnung pro NLA für die Szenarien
-    const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
-    const fitS = perNLAS * nlaS; 
+    // Fit-Out abhängig vom gewählten Mode (NLA / GLA / Total) für die Szenarien
+     const fitModeS = vals.fitMode ?? f.fitMode;
+
+    let fitS = 0;
+
+    if (fitModeS === "perNLA") {
+      const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
+      fitS = perNLAS * nlaS;
+    } else if (fitModeS === "perGLA") {
+      const perGLAS = clamp(P(vals.fitPerGLA ?? f.fitPerGLA));
+      fitS = perGLAS * glaS;
+    } else {
+      fitS = clamp(P(vals.fitTot ?? f.fitTot));
+    }
     
     const agentFeesS = agentS * rentS * glaS;
     const denomS = Math.max(1e-9, durationS * glaS);
@@ -408,7 +429,7 @@ export default function App() {
   wfData.push({ name: "Final NER", base: 0, delta: cur, isTotal: true });
 
   const scenarioView = scenarios.map((sc) => {
-    const vals = { ...f, ...sc.overrides };
+    const vals = { ...f, ...sc.overrides, fitMode: sc.fitMode };
     return { id: sc.id, ner: calcScenarioNER(vals) };
   });
 
@@ -558,11 +579,31 @@ return (
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
-                    <div>Total Headline Rent</div><div className="text-right"><Money value={totalHeadline} /></div>
-                    <div>Total Rent Frees</div><div className="text-right text-red-600"><Money value={-totalRentFrees} /></div>
-                    <div>Total Agent Fees</div><div className="text-right text-red-600"><Money value={-totalAgentFees} /></div>
-                    <div>Unforeseen Costs</div><div className="text-right text-red-600"><Money value={-totalUnforeseen} /></div>
+                  <div>Total Headline Rent</div>
+                  <div className="text-right">
+                    <Money value={totalHeadline} />
                   </div>
+                
+                  <div>Total Rent Frees</div>
+                  <div className="text-right text-red-600">
+                    <Money value={-totalRentFrees} />
+                  </div>
+                
+                  <div>Total Agent Fees</div>
+                  <div className="text-right text-red-600">
+                    <Money value={-totalAgentFees} />
+                  </div>
+                
+                  <div>Unforeseen</div>
+                  <div className="text-right">
+                    <div>
+                      <Money value={-totalUnforeseen} />
+                    </div>
+                    <div className="text-[10px] text-gray-400 leading-tight">
+                      (+ = cost / − = compensation)
+                    </div>
+                  </div>
+                </div>
 
                   <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
 
@@ -670,14 +711,52 @@ return (
                 ))}
               </tr>
               <tr>
-                <td className="border p-2 font-medium bg-gray-50">Fit-Out (€/sqm NLA)</td>
-                <td className="border p-2 text-right">{F(perNLA, 2)}</td>
-                {scenarios.map((sc) => (
-                  <td key={sc.id} className="border p-1">
-                    <ScenarioField value={resolveScenario(sc, "fitPerNLA")} onChange={(v) => setScenarioVal(sc.id, "fitPerNLA", v)} />
-                  </td>
-                ))}
+                <td className="border p-2 font-medium bg-gray-50">Fit-Out Mode</td>
+                <td className="border p-2 text-right">{f.fitMode}</td>
+              
+                {scenarios.map((sc) => {
+                  const mode = resolveFitMode(sc);
+                  return (
+                    <td key={sc.id} className="border p-1 text-center">
+                      <select
+                        value={mode}
+                        onChange={(e) => setScenarioFitMode(sc.id, e.target.value)}
+                        className="w-full border rounded-md p-1 text-xs"
+                      >
+                        <option value="perNLA">€/NLA</option>
+                        <option value="perGLA">€/GLA</option>
+                        <option value="total">Total</option>
+                      </select>
+                    </td>
+                  );
+                })}
               </tr>
+              <tr>
+  <td className="border p-2 font-medium bg-gray-50">Fit-Out</td>
+  <td className="border p-2 text-right">
+    {f.fitMode === "perNLA" && `${F(perNLA, 2)} €/NLA`}
+    {f.fitMode === "perGLA" && `${F(perGLA, 2)} €/GLA`}
+    {f.fitMode === "total" && `${FCUR0(totalFit)}`}
+  </td>
+
+  {scenarios.map((sc) => {
+    const mode = resolveFitMode(sc);
+
+    let key;
+    if (mode === "perNLA") key = "fitPerNLA";
+    else if (mode === "perGLA") key = "fitPerGLA";
+    else key = "fitTot";
+
+    return (
+      <td key={sc.id} className="border p-1">
+        <ScenarioField
+          value={resolveScenario(sc, key)}
+          onChange={(v) => setScenarioVal(sc.id, key, v)}
+        />
+      </td>
+    );
+  })}
+</tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
                 <td className="border p-2 text-right">{f.agent}</td>
