@@ -591,15 +591,13 @@ return (
                     <Money value={totalHeadline} />
                   </div>
                 
-                  <div>Total Rent Frees</div>
-                  <div className="text-right text-red-600">
-                    <Money value={-totalRentFrees} />
-                  </div>
+                  <div className="text-right">
+                  <Money value={-totalRentFrees} />
+                </div>
                 
-                  <div>Total Agent Fees</div>
-                  <div className="text-right text-red-600">
-                    <Money value={-totalAgentFees} />
-                  </div>
+                <div className="text-right">
+                  <Money value={-totalAgentFees} />
+                </div>
                 
                   <div>
   <span className="text-red-600">Lumpsum Costs (-)</span>{" "}
@@ -610,11 +608,6 @@ return (
                     <div>
                       <Money value={totalUnforeseen} />
                     </div>
-                    <div className="text-[10px] leading-tight">
-                    <span className="text-red-500">(- = cost)</span>{" "}
-                    <span className="text-green-600">(+ = compensation)</span>
-                  </div>
-                     </div>
                     </div>
 
                   <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
