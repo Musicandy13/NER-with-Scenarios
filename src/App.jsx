@@ -304,17 +304,29 @@ export default function App() {
   
   /* URL Data Loading */
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const data = params.get("data");
-    if (data) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(data));
+  const params = new URLSearchParams(window.location.search);
+  const data = params.get("data");
+
+  if (data) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(data));
+
+      // NEU: Struktur erkennen
+      if (parsed.f) {
+        setF((s) => ({ ...s, ...parsed.f }));
+        if (parsed.scenarios) {
+          setScenarios(parsed.scenarios);
+        }
+      } else {
+        // Fallback für alte Files
         setF((s) => ({ ...s, ...parsed }));
-      } catch (e) {
-        console.error("Failed to parse project data:", e);
       }
+
+    } catch (e) {
+      console.error("Failed to parse project data:", e);
     }
-  }, []);
+  }
+}, []);
 
   /* Calculations */
   const nla = clamp(P(f.nla));
@@ -483,7 +495,7 @@ export default function App() {
 };
 
   const exportProjectHTML = () => {
-    const data = encodeURIComponent(JSON.stringify(f));
+    const data = encodeURIComponent(  JSON.stringify({    f,    scenarios,  }));
     const tenant = f.tenant?.trim() || "ner-project";
     const content = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>NER Project - ${tenant}</title><meta http-equiv="refresh" content="0;url=${window.location.origin}${window.location.pathname}?data=${data}"></head><body><p>Redirecting to NER Calculator...</p></body></html>`;
     const blob = new Blob([content], { type: "text/html" });
