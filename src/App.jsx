@@ -154,7 +154,7 @@ function ScenarioField({ value, onChange, readOnly = false, bold = false }) {
         onChange?.(String(n));
       }}
       onChange={(e) => onChange?.(e.target.value.replace(/[^\d.,-]/g, ""))}
-      className={`w-full border rounded-md p-2 text-right tabular-nums ${readOnly ? "bg-gray-100 text-gray-800" : ""} ${bold ? "font-bold" : ""}`}
+      className={`  w-full border rounded-md p-2 text-right tabular-nums  ${P(value) > 0 ? "text-green-600" : ""}  ${P(value) < 0 ? "text-red-600" : ""}  ${readOnly ? "bg-gray-100 text-gray-800" : ""}  ${bold ? "font-bold" : ""}`}
     />
   );
 }
@@ -379,7 +379,7 @@ export default function App() {
     const durationS = Math.max(0, Math.floor(P(vals.duration ?? f.duration)));
     const rfS = clamp(P(vals.rf ?? f.rf));
     const agentS = clamp(P(vals.agent ?? f.agent));
-    const unforeseenS = P(vals.unforeseen ?? f.unforeseen);
+    const unforeseenS =  vals.unforeseen !== undefined    ? P(vals.unforeseen)    : P(f.unforeseen);
 
     const monthsS = Math.max(0, durationS - rfS);
     const grossS = rentS * glaS * monthsS;
