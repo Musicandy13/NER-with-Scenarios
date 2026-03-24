@@ -560,7 +560,7 @@ return (
 
               <div className="grid grid-cols-2 gap-4">
                 <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
-                <NumericField  label={    <>      <span className="text-red-600">Lumpsum Costs (-)</span>{" "}      /{" "}      <span className="text-green-600">Compensation (+)</span>    </>  }
+                <NumericField  label={    <>      <span className="text-red-600 text-xs whitespace-nowrap">Lumpsum Costs (-)</span>{" "}      /{" "}      <span className="text-green-600 text-xs whitespace-nowrap">Compensation (+)</span>  }
   value={f.unforeseen}
   onChange={S("unforeseen")}
   suffix="€"
@@ -691,7 +691,7 @@ return (
             <tbody className="divide-y divide-gray-200">
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Headline Rent (€/sqm)</td>
-                <td className="border p-2 text-right font-bold">{F(rent, 2)}</td>
+                <td className="border p-1">  <ScenarioField    value={f.rent}    onChange={(v) => S("rent")(v)}  /></td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "rent")} onChange={(v) => setScenarioVal(sc.id, "rent", v)} />
