@@ -273,9 +273,9 @@ export default function App() {
 
   /* Scenarios */
   const [scenarios, setScenarios] = useState([
-  { id: 2, overrides: {}, fitMode: null },
-  { id: 3, overrides: {}, fitMode: null },
-  { id: 4, overrides: {}, fitMode: null },
+  { id: 2, overrides: {},  },
+  { id: 3, overrides: {},  },
+  { id: 4, overrides: {},  },
 ]);
 
   const setScenarioVal = (id, key, value) => {
@@ -286,21 +286,13 @@ export default function App() {
     );
   };
 
-  const setScenarioFitMode = (id, mode) => {
-  setScenarios((arr) =>
-    arr.map((sc) =>
-      sc.id === id ? { ...sc, fitMode: mode } : sc
-    )
-  );
-};
-
+  
   const resolveScenario = (sc, key) => {
     const v = sc.overrides[key];
     return v !== undefined ? v : f[key];
   };
 
-  const resolveFitMode = (sc) => sc.fitMode ?? f.fitMode ?? "perNLA";
-
+  
   /* URL Data Loading */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -384,7 +376,7 @@ export default function App() {
     const grossS = rentS * glaS * monthsS;
 
     // Fit-Out abhängig vom gewählten Mode (NLA / GLA / Total) für die Szenarien
-     const fitModeS = vals.fitMode ?? f.fitMode;
+     const fitModeS = f.fitMode;
 
     let fitS = 0;
 
@@ -711,28 +703,10 @@ return (
                 ))}
               </tr>
               <tr>
-                <td className="border p-2 font-medium bg-gray-50">Fit-Out Mode</td>
-                <td className="border p-2 text-right">{f.fitMode}</td>
-              
-                {scenarios.map((sc) => {
-                  const mode = resolveFitMode(sc);
-                  return (
-                    <td key={sc.id} className="border p-1 text-center">
-                      <select
-                        value={mode}
-                        onChange={(e) => setScenarioFitMode(sc.id, e.target.value)}
-                        className="w-full border rounded-md p-1 text-xs"
-                      >
-                        <option value="perNLA">€/NLA</option>
-                        <option value="perGLA">€/GLA</option>
-                        <option value="total">Total</option>
-                      </select>
-                    </td>
-                  );
-                })}
-              </tr>
-              <tr>
-  <td className="border p-2 font-medium bg-gray-50">Fit-Out</td>
+  <td className="border p-2 font-medium bg-gray-50">
+  Fit-Out ({f.fitMode === "perNLA" ? "€/NLA" : f.fitMode === "perGLA" ? "€/GLA" : "€ total"})
+</td>
+
   <td className="border p-2 text-right">
     {f.fitMode === "perNLA" && `${F(perNLA, 2)} €/NLA`}
     {f.fitMode === "perGLA" && `${F(perGLA, 2)} €/GLA`}
@@ -740,11 +714,10 @@ return (
   </td>
 
   {scenarios.map((sc) => {
-    const mode = resolveFitMode(sc);
-
     let key;
-    if (mode === "perNLA") key = "fitPerNLA";
-    else if (mode === "perGLA") key = "fitPerGLA";
+
+    if (f.fitMode === "perNLA") key = "fitPerNLA";
+    else if (f.fitMode === "perGLA") key = "fitPerGLA";
     else key = "fitTot";
 
     return (
@@ -757,6 +730,9 @@ return (
     );
   })}
 </tr>
+              
+             
+  
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
                 <td className="border p-2 text-right">{f.agent}</td>
