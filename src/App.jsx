@@ -758,7 +758,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50 italic">  <span className="text-red-600">Lumpsum Costs (-)</span>{" "}  /{" "}  <span className="text-green-600">Compensation (+)</span></td>
-                <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
+                <td className={`border p-2 text-right font-medium ${P(f.unforeseen) >= 0 ? "text-green-600" : "text-red-600"}`}>  {FCUR0(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "unforeseen")} onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)} />
