@@ -560,7 +560,13 @@ return (
 
               <div className="grid grid-cols-2 gap-4">
                 <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
-                <NumericField  label="Lumpsum (€)"   value={f.unforeseen}   onChange={S("unforeseen")}   suffix="€"  min={-999999999} colorize />
+                <NumericField  label={    <>      <span className="text-red-600">Lumpsum Costs (-)</span>{" "}      /{" "}      <span className="text-green-600">Compensation (+)</span>    </>  }
+  value={f.unforeseen}
+  onChange={S("unforeseen")}
+  suffix="€"
+  min={-999999999}
+  colorize
+/>
               </div>
             </div>
 
