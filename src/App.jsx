@@ -605,6 +605,7 @@ return (
                     <span className="text-green-600">(+ = compensation)</span>
                   </div>
                      </div>
+                    </div>
 
                   <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
 
