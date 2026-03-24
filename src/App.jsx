@@ -722,7 +722,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Lease Term (months)</td>
-                <td className="border p-2 text-right">{f.duration}</td>
+                <td className="border p-2 text-right">{F(P(f.duration), 2)}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "duration")} onChange={(v) => setScenarioVal(sc.id, "duration", v)} />
