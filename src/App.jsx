@@ -731,7 +731,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
-                <td className="border p-2 text-right"><td className="border p-2 text-right">{f.rf}</td></td>
+                <td className="border p-2 text-right">  {F(P(f.rf), 2)}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
@@ -778,7 +778,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50 italic">  <span className="text-red-600">Lumpsum Costs (-)</span>{" "}  /{" "}  <span className="text-green-600">Compensation (+)</span></td>
-                <td className={`border p-2 text-right font-medium ${P(f.unforeseen) >= 0 ? "text-green-600" : "text-red-600"}`}>  {FCUR0(P(f.unforeseen))}</td>
+                <td className={`border p-2 text-right font-medium ${  P(f.unforeseen) >= 0 ? "text-green-600" : "text-red-600"}`}>  {FCUR(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
                   <td  key={sc.id}  className={`border p-1 ${    P(resolveScenario(sc, "unforeseen")) >= 0      ? "text-green-600 font-medium"      : "text-red-600 font-medium"  }`}>
                     <ScenarioField
