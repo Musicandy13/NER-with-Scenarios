@@ -581,36 +581,36 @@ return (
                   )}
 
                   <div className="mt-1 rounded-xl ring-2 ring-blue-300 ring-offset-1 bg-blue-50 px-4 py-2 flex items-center justify-between shadow-sm mb-3">
-                    <div className="font-bold text-lg text-blue-900">Headline Rent</div>
-                    <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
-                  </div>
+                  <div className="font-bold text-lg text-blue-900">Headline Rent</div>
+                  <div className="text-lg font-extrabold text-gray-900">{F(rent, 2)} €/sqm</div>
+                </div>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
 
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mb-3 text-gray-600 italic">
                   <div>Total Headline Rent</div>
-                  <div className="text-right">
-                    <Money value={totalHeadline} />
+                  <div className="text-right text-green-600 font-medium">
+                    {FCUR(totalHeadline)}
                   </div>
-                     </div>
                 
-                  <div className="text-right">
-                  <Money value={-totalRentFrees} />
-                </div>
+                  <div>Total Rent Frees</div>
+                  <div className="text-right text-red-600 font-medium">
+                    {FCUR(-totalRentFrees)}
+                  </div>
                 
-                <div className="text-right">
-                  <Money value={-totalAgentFees} />
-                </div>
+                  <div>Total Agent Fees</div>
+                  <div className="text-right text-red-600 font-medium">
+                    {FCUR(-totalAgentFees)}
+                  </div>
                 
                   <div>
-  <span className="text-red-600">Lumpsum Costs (-)</span>{" "}
-  /{" "}
-  <span className="text-green-600">Compensation (+)</span>
-</div>
-                  <div className="text-right">
-                    <div>
-                      <Money value={totalUnforeseen} />
-                    </div>
-                    </div>
-
+                    <span className="text-red-600">Lumpsum Costs (-)</span>{" "}
+                    /{" "}
+                    <span className="text-green-600">Compensation (+)</span>
+                  </div>
+                  <div className={`text-right font-medium ${totalUnforeseen >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    {FCUR(totalUnforeseen)}
+                  </div>
+                
+                </div>
                   <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
 
                   <div className="space-y-1 text-sm border-t pt-2">
