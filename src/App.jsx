@@ -49,7 +49,11 @@ const FCUR0 = (n) =>
 
 /* ---------- COMPONENTS ---------- */
 function Money({ value }) {
-  const cls = value < 0 ? "text-red-600 font-medium" : "text-gray-900 font-medium";
+  let cls = "text-gray-900 font-medium";
+
+  if (value > 0) cls = "text-red-600 font-medium";     // Cost
+  if (value < 0) cls = "text-green-600 font-medium";   // Compensation
+
   return <span className={cls}>{FCUR(value)}</span>;
 }
 
@@ -73,6 +77,7 @@ function NumericField({
   readOnly = false,
   onCommit,
   suffix,
+  colorize = false, 
 }) {
   const [focus, setFocus] = useState(false);
   const inputRef = useRef(null);
@@ -110,7 +115,11 @@ function NumericField({
             onCommit?.(n);
           }}
           onChange={(e) => onChange(e.target.value.replace(/[^\d.,-]/g, ""))}
-          className={`mt-1 block w-full border rounded-md p-2 pr-16 ${readOnly ? "bg-gray-100 text-gray-600" : ""}`}
+          className={`mt-1 block w-full border rounded-md p-2 pr-16 
+  ${readOnly ? "bg-gray-100 text-gray-600" : ""}
+  ${colorize && P(value) > 0 ? "text-green-600" : ""}
+  ${colorize && P(value) < 0 ? "text-red-600" : ""}
+`}
         />
         {suffix && (
           <span className="absolute inset-y-0 right-3 top-1/2 -translate-y-1/2 text-gray-500">
@@ -354,7 +363,7 @@ export default function App() {
   const ner1 = gross / denom;
   const ner2 = (gross - totalFit) / denom;
   const ner3 = (gross - totalFit - agentFees) / denom;
-  const ner4 = (gross - totalFit - agentFees - unforeseen) / denom;
+  const ner4 = (gross - totalFit - agentFees + unforeseen) / denom;
 
   const totalHeadline = rent * gla * duration;
   const totalRentFrees = rent * gla * rf;
@@ -421,7 +430,7 @@ export default function App() {
   wfData.push({ name: "Final NER", base: 0, delta: cur, isTotal: true });
 
   const scenarioView = scenarios.map((sc) => {
-    const vals = { ...f, ...sc.overrides, fitMode: sc.fitMode };
+   const vals = { ...f, ...sc.overrides };
     return { id: sc.id, ner: calcScenarioNER(vals) };
   });
 
@@ -551,7 +560,7 @@ return (
 
               <div className="grid grid-cols-2 gap-4">
                 <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
-                <NumericField label="Unforeseen (€)" value={f.unforeseen} onChange={S("unforeseen")} suffix="€" />
+                <NumericField  label="Lumpsum (€)"   value={f.unforeseen}   onChange={S("unforeseen")}   suffix="€"  min={-999999999} colorize />
               </div>
             </div>
 
@@ -586,16 +595,16 @@ return (
                     <Money value={-totalAgentFees} />
                   </div>
                 
-                  <div>Unforeseen</div>
+                  <div>Lumpsum Costs (-) / Compensation (+)</div>
                   <div className="text-right">
                     <div>
-                      <Money value={-totalUnforeseen} />
+                      <Money value={totalUnforeseen} />
                     </div>
-                    <div className="text-[10px] text-gray-400 leading-tight">
-                      (+ = cost / − = compensation)
-                    </div>
+                    <div className="text-[10px] leading-tight">
+                    <span className="text-red-500">(- = cost)</span>{" "}
+                    <span className="text-green-600">(+ = compensation)</span>
                   </div>
-                </div>
+                     </div>
 
                   <p className="text-sm font-semibold text-red-600 mb-2">Total Fit Out: {FCUR(totalFit)}</p>
 
@@ -743,7 +752,7 @@ return (
                 ))}
               </tr>
               <tr>
-                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">Unforeseen (€ total)</td>
+                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">  Lumpsum Costs (-) / Compensation (+)</td>
                 <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
