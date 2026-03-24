@@ -276,6 +276,7 @@ export default function App() {
     fitTot: "300000.00",
     unforeseen: "0",
   });
+  const [isLoaded, setIsLoaded] = useState(false);
   const S = (k) => (v) => setF((s) => ({ ...s, [k]: v }));
   const [isExporting, setIsExporting] = useState(false);
   const [viewMode, setViewMode] = useState("bars");
@@ -311,14 +312,10 @@ export default function App() {
     try {
       const parsed = JSON.parse(decodeURIComponent(data));
 
-      // NEU: Struktur erkennen
       if (parsed.f) {
         setF((s) => ({ ...s, ...parsed.f }));
-        if (parsed.scenarios) {
-          setScenarios(parsed.scenarios);
-        }
+        if (parsed.scenarios) setScenarios(parsed.scenarios);
       } else {
-        // Fallback für alte Files
         setF((s) => ({ ...s, ...parsed }));
       }
 
@@ -326,6 +323,9 @@ export default function App() {
       console.error("Failed to parse project data:", e);
     }
   }
+
+  setIsLoaded(true);   // ✅ DAS HIER HINZUFÜGEN
+
 }, []);
 
   /* Calculations */
@@ -346,27 +346,37 @@ export default function App() {
   const tot = clamp(P(f.fitTot));
 
   /* Sync Fit-outs */
-  useEffect(() => {
-    const nNLA = clamp(P(f.fitPerNLA));
-    const nGLA = clamp(P(f.fitPerGLA));
-    const nTot = clamp(P(f.fitTot));
-    if (f.fitMode === "perNLA") {
-      const t = nNLA * nla;
-      const g = gla > 0 ? t / gla : 0;
-      if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
-      if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
-    } else if (f.fitMode === "perGLA") {
-      const t = nGLA * gla;
-      const n = nla > 0 ? t / nla : 0;
-      if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
-      if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
-    } else {
-      const n = nla > 0 ? nTot / nla : 0;
-      const g = gla > 0 ? nTot / gla : 0;
-      if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
-      if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
-    }
-  }, [f.fitMode, f.nla, f.addon, f.fitPerNLA, f.fitPerGLA, f.fitTot, gla, nla]);
+useEffect(() => {
+
+  if (!isLoaded) return;   // ✅ verhindert falsches Überschreiben beim Laden
+
+  const nNLA = clamp(P(f.fitPerNLA));
+  const nGLA = clamp(P(f.fitPerGLA));
+  const nTot = clamp(P(f.fitTot));
+
+  if (f.fitMode === "perNLA") {
+    const t = nNLA * nla;
+    const g = gla > 0 ? t / gla : 0;
+
+    if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
+    if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
+
+  } else if (f.fitMode === "perGLA") {
+    const t = nGLA * gla;
+    const n = nla > 0 ? t / nla : 0;
+
+    if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
+    if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
+
+  } else {
+    const n = nla > 0 ? nTot / nla : 0;
+    const g = gla > 0 ? nTot / gla : 0;
+
+    if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
+    if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
+  }
+
+}, [isLoaded, f.fitMode, f.nla, f.addon, f.fitPerNLA, f.fitPerGLA, f.fitTot, gla, nla]);
 
   const totalFit = f.fitMode === "perNLA" ? perNLA * nla : f.fitMode === "perGLA" ? perGLA * gla : tot;
   const agentFees = agent * rent * gla;
