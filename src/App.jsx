@@ -154,7 +154,7 @@ function ScenarioField({ value, onChange, readOnly = false, bold = false }) {
         onChange?.(String(n));
       }}
       onChange={(e) => onChange?.(e.target.value.replace(/[^\d.,-]/g, ""))}
-      className={`  w-full border rounded-md p-2 text-right tabular-nums  ${P(value) > 0 ? "text-green-600" : ""}  ${P(value) < 0 ? "text-red-600" : ""}  ${readOnly ? "bg-gray-100 text-gray-800" : ""}  ${bold ? "font-bold" : ""}`}
+      className={`  w-full border rounded-md p-2 text-right tabular-nums  ${readOnly ? "bg-gray-100 text-gray-800" : ""}  ${bold ? "font-bold" : ""}`}
     />
   );
 }
@@ -402,7 +402,7 @@ export default function App() {
     const agentFeesS = agentS * rentS * glaS;
     const denomS = Math.max(1e-9, durationS * glaS);
 
-    return (grossS - fitS - agentFeesS - unforeseenS) / denomS;
+    return (grossS - fitS - agentFeesS + unforeseenS) / denomS;
   };
 
   const NER_COLORS = ["#1e3a8a", "#2563eb", "#3b82f6", "#60a5fa"];
@@ -595,7 +595,11 @@ return (
                     <Money value={-totalAgentFees} />
                   </div>
                 
-                  <div>Lumpsum Costs (-) / Compensation (+)</div>
+                  <div>
+  <span className="text-red-600">Lumpsum Costs (-)</span>{" "}
+  /{" "}
+  <span className="text-green-600">Compensation (+)</span>
+</div>
                   <div className="text-right">
                     <div>
                       <Money value={totalUnforeseen} />
@@ -753,7 +757,7 @@ return (
                 ))}
               </tr>
               <tr>
-                <td className="border p-2 font-medium bg-gray-50 italic text-gray-500">  Lumpsum Costs (-) / Compensation (+)</td>
+                <td className="border p-2 font-medium bg-gray-50 italic">  <span className="text-red-600">Lumpsum Costs (-)</span>{" "}  /{" "}  <span className="text-green-600">Compensation (+)</span></td>
                 <td className="border p-2 text-right">{FCUR0(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
