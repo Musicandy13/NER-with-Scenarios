@@ -560,7 +560,7 @@ return (
 
               <div className="grid grid-cols-2 gap-4">
                 <NumericField label="Agent Fees (months)" value={f.agent} onChange={S("agent")} />
-                <NumericField  label={    <>      <span className="text-red-600 text-xs whitespace-nowrap">Lumpsum Costs (-)</span>{" "}      /{" "}      <span className="text-green-600 text-xs whitespace-nowrap">Compensation (+)</span>  }
+                <NumericField  label={    <>      <span className="text-red-600 text-xs whitespace-nowrap">Lumpsum Costs (-)</span>{" "}      /{" "}      <span className="text-green-600 text-xs whitespace-nowrap">Compensation (+)</span>   </>}
   value={f.unforeseen}
   onChange={S("unforeseen")}
   suffix="€"
@@ -717,36 +717,29 @@ return (
                 ))}
               </tr>
               <tr>
-  <td className="border p-2 font-medium bg-gray-50">
-  Fit-Out ({f.fitMode === "perNLA" ? "€/NLA" : f.fitMode === "perGLA" ? "€/GLA" : "€ total"})
-</td>
-
-  <td className="border p-2 text-right">
-    {f.fitMode === "perNLA" && `${F(perNLA, 2)} €/NLA`}
-    {f.fitMode === "perGLA" && `${F(perGLA, 2)} €/GLA`}
-    {f.fitMode === "total" && `${FCUR0(totalFit)}`}
-  </td>
-
-  {scenarios.map((sc) => {
-    let key;
-
-    if (f.fitMode === "perNLA") key = "fitPerNLA";
-    else if (f.fitMode === "perGLA") key = "fitPerGLA";
-    else key = "fitTot";
-
-    return (
-      <td key={sc.id} className="border p-1">
-        <ScenarioField
-          value={resolveScenario(sc, key)}
-          onChange={(v) => setScenarioVal(sc.id, key, v)}
-        />
-      </td>
-    );
-  })}
-</tr>
-              
-             
-  
+                <td className="border p-2 font-medium bg-gray-50">
+                  Fit-Out ({f.fitMode === "perNLA" ? "€/NLA" : f.fitMode === "perGLA" ? "€/GLA" : "€ total"})
+                </td>
+                <td className="border p-2 text-right">
+                  {f.fitMode === "perNLA" && `${F(perNLA, 2)} €/NLA`}
+                  {f.fitMode === "perGLA" && `${F(perGLA, 2)} €/GLA`}
+                  {f.fitMode === "total" && `${FCUR0(totalFit)}`}
+                </td>
+                {scenarios.map((sc) => {
+                  let key;
+                  if (f.fitMode === "perNLA") key = "fitPerNLA";
+                  else if (f.fitMode === "perGLA") key = "fitPerGLA";
+                  else key = "fitTot";
+                  return (
+                    <td key={sc.id} className="border p-1">
+                      <ScenarioField
+                        value={resolveScenario(sc, key)}
+                        onChange={(v) => setScenarioVal(sc.id, key, v)}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
                 <td className="border p-2 text-right">{f.agent}</td>
@@ -761,25 +754,18 @@ return (
                 <td className={`border p-2 text-right font-medium ${P(f.unforeseen) >= 0 ? "text-green-600" : "text-red-600"}`}>  {FCUR0(P(f.unforeseen))}</td>
                 {scenarios.map((sc) => (
                   <td  key={sc.id}  className={`border p-1 ${    P(resolveScenario(sc, "unforeseen")) >= 0      ? "text-green-600 font-medium"      : "text-red-600 font-medium"  }`}>
-              <ScenarioField
-                  value={resolveScenario(sc, "unforeseen")}
-                  onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)}
-                />
-              </td>
+                    <ScenarioField
+                      value={resolveScenario(sc, "unforeseen")}
+                      onChange={(v) => setScenarioVal(sc.id, "unforeseen", v)}
+                    />
+                  </td>
                 ))}
               </tr>
-
-              {/* FINAL NER ZEILE */}
               <tr className="bg-blue-600 text-white font-bold text-lg">
                 <td className="border p-3">FINAL NER (€/sqm)</td>
-                <td className={`border p-3 text-right ring-2 ring-white ring-inset ${ner4 < 0 ? 'text-red-400' : 'text-white'}`}>
-                  {F(ner4, 2)}
-                </td>
-                {scenarioView.map((s) => (
-                  <td key={s.id} 
-                      className={`border p-3 text-right ${s.ner < 0 ? 'text-red-400' : 'text-white'}`}>
-                    {F(s.ner, 2)}
-                  </td>
+                <td className="border p-3 text-right">{F(ner4, 2)} €</td>
+                {scenarioView.map((sv) => (
+                  <td key={sv.id} className="border p-3 text-right">{F(sv.ner, 2)} €</td>
                 ))}
               </tr>
             </tbody>
