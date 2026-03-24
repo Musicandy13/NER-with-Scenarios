@@ -590,6 +590,7 @@ return (
                   <div className="text-right">
                     <Money value={totalHeadline} />
                   </div>
+                     </div>
                 
                   <div className="text-right">
                   <Money value={-totalRentFrees} />
