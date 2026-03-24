@@ -731,7 +731,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Rent-Free (months)</td>
-                <td className="border p-2 text-right">{f.rf}</td>
+                <td className="border p-2 text-right"><td className="border p-2 text-right">{f.rf}</td></td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "rf")} onChange={(v) => setScenarioVal(sc.id, "rf", v)} />
@@ -743,9 +743,14 @@ return (
                   Fit-Out ({f.fitMode === "perNLA" ? "€/NLA" : f.fitMode === "perGLA" ? "€/GLA" : "€ total"})
                 </td>
                 <td className="border p-2 text-right">
-                  {f.fitMode === "perNLA" && `${F(perNLA, 2)} €/NLA`}
-                  {f.fitMode === "perGLA" && `${F(perGLA, 2)} €/GLA`}
-                  {f.fitMode === "total" && `${FCUR0(totalFit)}`}
+                  {F(
+                  f.fitMode === "perNLA"
+                    ? perNLA
+                    : f.fitMode === "perGLA"
+                    ? perGLA
+                    : totalFit,
+                  2
+                )}
                 </td>
                 {scenarios.map((sc) => {
                   let key;
@@ -764,7 +769,7 @@ return (
               </tr>
               <tr>
                 <td className="border p-2 font-medium bg-gray-50">Agent Fees (months)</td>
-                <td className="border p-2 text-right">{f.agent}</td>
+                <td className="border p-2 text-right">{F(P(f.agent), 2)}</td>
                 {scenarios.map((sc) => (
                   <td key={sc.id} className="border p-1">
                     <ScenarioField value={resolveScenario(sc, "agent")} onChange={(v) => setScenarioVal(sc.id, "agent", v)} />
