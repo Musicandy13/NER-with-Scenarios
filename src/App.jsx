@@ -519,6 +519,38 @@ useEffect(() => {
     URL.revokeObjectURL(url);
   };
 
+  if (isAppleSupport) {
+  return (
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "50px auto",
+        padding: "20px",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <h1>NER Calculator Support</h1>
+
+      <p>
+        For support, questions, bug reports or feature requests please contact:
+      </p>
+
+      <p>
+        <a href="mailto:andriy.ivchenko@gmx.at">
+          andriy.ivchenko@gmx.at
+        </a>
+      </p>
+
+      <p>
+        We usually respond within 2 business days.
+      </p>
+    </div>
+  );
+}
+
+return (
+    <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
+
 return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
