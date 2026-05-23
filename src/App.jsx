@@ -262,6 +262,8 @@ function WaterfallChart({ data, isExporting }) {
 
 /* ---------- APP ---------- */
 export default function App() {
+  const isAppleSupport =
+  window.location.pathname === "/apple-support";
   const [f, setF] = useState({
     tenant: "",
     nla: "1000",
