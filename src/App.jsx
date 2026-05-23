@@ -550,9 +550,6 @@ useEffect(() => {
 
 return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
-
-return (
-    <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
         ref={pageRef}
         className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
