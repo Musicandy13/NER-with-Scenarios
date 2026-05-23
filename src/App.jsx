@@ -543,6 +543,9 @@ useEffect(() => {
 
       <p>
         We usually respond within 2 business days.
+
+        <p>Application: NER – Net Effective Rent Calculator
+Developer: Andriy Ivchenko</p>
       </p>
     </div>
   );
