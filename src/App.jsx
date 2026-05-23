@@ -519,33 +519,50 @@ useEffect(() => {
     URL.revokeObjectURL(url);
   };
 
-  if (isAppleSupport) {
+if (isAppleSupport) {
   return (
     <div
       style={{
-        maxWidth: "800px",
-        margin: "50px auto",
-        padding: "20px",
+        maxWidth: "700px",
+        margin: "60px auto",
+        padding: "30px",
         fontFamily: "Arial, sans-serif",
+        backgroundColor: "#ffffff",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
       }}
     >
-      <h1>NER Calculator Support</h1>
+      <h1
+        style={{
+          color: "#005CA9",
+          marginBottom: "25px",
+        }}
+      >
+        NER Calculator Support
+      </h1>
 
-      <p>
+      <p style={{ lineHeight: "1.6" }}>
         For support, questions, bug reports or feature requests please contact:
       </p>
 
       <p>
-        <a href="mailto:andriy.ivchenko@gmx.at">
+        <a
+          href="mailto:andriy.ivchenko@gmx.at"
+          style={{
+            color: "#005CA9",
+            fontWeight: "bold",
+            textDecoration: "none",
+          }}
+        >
           andriy.ivchenko@gmx.at
         </a>
       </p>
 
-      <p>
+      <p style={{ color: "#555" }}>
         We usually respond within 2 business days.
       </p>
 
-      <hr />
+      <hr style={{ margin: "25px 0" }} />
 
       <p>
         <strong>Application:</strong> NER – Net Effective Rent Calculator
