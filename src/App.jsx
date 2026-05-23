@@ -543,14 +543,20 @@ useEffect(() => {
 
       <p>
         We usually respond within 2 business days.
+      </p>
 
-        <p>Application: NER – Net Effective Rent Calculator
-Developer: Andriy Ivchenko</p>
+      <hr />
+
+      <p>
+        <strong>Application:</strong> NER – Net Effective Rent Calculator
+      </p>
+
+      <p>
+        <strong>Developer:</strong> Andriy Ivchenko
       </p>
     </div>
   );
 }
-
 return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
