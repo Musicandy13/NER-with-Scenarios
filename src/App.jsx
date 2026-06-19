@@ -315,9 +315,8 @@ useEffect(() => {
       setIsExporting(true);
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const rect = node.getBoundingClientRect();
-      const pad = 24;
-      const w = Math.ceil(rect.width) + pad * 2;
-      const h = Math.ceil(rect.height) + pad * 2;
+      const w = Math.ceil(Math.max(rect.width, node.scrollWidth));
+      const h = Math.ceil(Math.max(rect.height, node.scrollHeight));
       const dataUrl = await toPng(node, {
         cacheBust: true,
         pixelRatio: 3,
@@ -326,7 +325,7 @@ useEffect(() => {
         height: h,
         canvasWidth: w,
         canvasHeight: h,
-        style: { padding: `${pad}px`, margin: "0", overflow: "visible", boxShadow: "none", borderRadius: "0" },
+        style: { width: `${w}px`, height: `${h}px`, margin: "0", overflow: "visible", boxShadow: "none" },
       });
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -347,8 +346,7 @@ useEffect(() => {
 
   const exportFullPNG = async () => {
   const fname = f.tenant?.trim() ? `${f.tenant.trim()}-calculator.png` : "ner-calculator.png";
-  // Change pageRef.current to calculatorRef.current
-  await exportNode(calculatorRef.current, fname); 
+  await exportNode(pageRef.current, fname); 
 };
 
   const exportProjectHTML = () => {
@@ -558,7 +556,7 @@ return (
                       </ResponsiveContainer>
                     </div>
                     <div className="h-48 col-span-2">
-                      <div className="flex justify-end gap-2 mb-1">
+                      <div className={`flex justify-end gap-2 mb-1 ${isExporting ? "hidden" : ""}`}>
                         <button onClick={() => setViewMode("bars")} className={`text-[10px] px-1 border rounded ${viewMode === 'bars' ? 'bg-gray-200' : ''}`}>Bars</button>
                         <button onClick={() => setViewMode("waterfall")} className={`text-[10px] px-1 border rounded ${viewMode === 'waterfall' ? 'bg-gray-200' : ''}`}>Waterfall</button>
                       </div>
@@ -567,10 +565,10 @@ return (
                   </div>
 
                   <div className="mt-4 border-t-2 border-dashed pt-3">
-                    <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between shadow-md">
-                      <div className="text-sky-700 font-extrabold">🏁 Final NER</div>
-                      <div className="text-2xl font-extrabold text-gray-900">{F(ner4, 2)} €/sqm</div>
-                      <div className="ml-2 text-sm"><Delta base={rent} val={ner4} /></div>
+                    <div className="rounded-2xl ring-2 ring-sky-500 ring-offset-2 bg-sky-50 px-5 py-3 flex items-center justify-between gap-3 shadow-md">
+                      <div className="text-sky-700 font-extrabold whitespace-nowrap">🏁 Final NER</div>
+                      <div className="text-2xl font-extrabold text-gray-900 whitespace-nowrap">{F(ner4, 2)} €/sqm</div>
+                      <div className="ml-2 text-sm whitespace-nowrap"><Delta base={rent} val={ner4} /></div>
                     </div>
                   </div>
                 </div>
