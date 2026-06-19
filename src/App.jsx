@@ -84,15 +84,15 @@ const scenarioResultCellStyle = (base, val) => {
   const diff = val - base;
   if (Math.abs(diff) < 0.005) return { backgroundColor: "#2563eb", color: "#ffffff" };
 
-  const pct = Math.abs(base) > 1e-9 ? Math.abs((diff / Math.abs(base)) * 100) : 0;
-  const intensity = Math.min(pct / 35, 1);
+  const absoluteDelta = Math.abs(diff);
+  const intensity = Math.min(Math.sqrt(absoluteDelta / 5), 1);
   const hue = diff > 0 ? 142 : 0;
-  const saturation = diff > 0 ? 72 : 82;
-  const lightness = diff > 0 ? 88 - intensity * 56 : 90 - intensity * 50;
+  const saturation = diff > 0 ? 78 : 86;
+  const lightness = diff > 0 ? 90 - intensity * 55 : 92 - intensity * 52;
 
   return {
     backgroundColor: `hsl(${hue} ${saturation}% ${lightness}%)`,
-    color: lightness > 63 ? "#111827" : "#ffffff",
+    color: lightness > 66 ? "#111827" : "#ffffff",
   };
 };
 
