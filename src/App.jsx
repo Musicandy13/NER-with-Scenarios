@@ -67,6 +67,19 @@ function Delta({ base, val }) {
   );
 }
 
+function ScenarioDelta({ base, val }) {
+  const pct = Math.abs(base) > 1e-9 ? ((val - base) / Math.abs(base)) * 100 : 0;
+  const up = pct > 0;
+  const down = pct < 0;
+  const sign = up ? "+" : "";
+
+  return (
+    <span className={`${up ? "text-green-600" : down ? "text-red-600" : "text-gray-500"} font-bold tabular-nums`}>
+      {up ? "▲" : down ? "▼" : "■"} {sign}{F(pct, 2)}%
+    </span>
+  );
+}
+
 function NumericField({
   label,
   value,
@@ -850,6 +863,15 @@ return (
                 <td className="border p-3 text-right">{F(ner4, 2)} €</td>
                 {scenarioView.map((sv) => (
                   <td key={sv.id} className="border p-3 text-right">{F(sv.ner, 2)} €</td>
+                ))}
+              </tr>
+              <tr className="bg-white text-sm">
+                <td className="border p-2 font-semibold bg-gray-50">Deviation vs Current</td>
+                <td className="border p-2 text-right text-gray-500 font-medium">Base case</td>
+                {scenarioView.map((sv) => (
+                  <td key={sv.id} className="border p-2 text-right">
+                    <ScenarioDelta base={ner4} val={sv.ner} />
+                  </td>
                 ))}
               </tr>
             </tbody>
