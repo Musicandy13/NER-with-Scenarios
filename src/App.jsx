@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -12,7 +12,8 @@ import {
 } from "recharts";
 import { toPng } from "html-to-image";
 import { NumericField, ScenarioField } from "./components/NumericFields";
-import { clamp, F, FCUR, FCUR0, P, safe } from "./utils/format";
+import { calculateNER, calculateScenarioNER, getFitOutSyncUpdates } from "./utils/calculations";
+import { F, FCUR, FCUR0, P, safe } from "./utils/format";
 
 /* ---- CONSTANTS ---- */
 const BASE_H = 20;
@@ -243,104 +244,35 @@ export default function App() {
 
 }, []);
 
-  /* Calculations */
-  const nla = clamp(P(f.nla));
-  const addon = clamp(P(f.addon));
-  const rent = clamp(P(f.rent));
-  const duration = Math.max(0, Math.floor(P(f.duration)));
-  const rf = clamp(P(f.rf));
-  const agent = clamp(P(f.agent));
-  const unforeseen = P(f.unforeseen);
-
-  const gla = useMemo(() => nla * (1 + addon / 100), [nla, addon]);
-  const months = Math.max(0, duration - rf);
-  const gross = rent * gla * months;
-
-  const perNLA = clamp(P(f.fitPerNLA));
-  const perGLA = clamp(P(f.fitPerGLA));
-  const tot = clamp(P(f.fitTot));
+  const {
+    nla,
+    gla,
+    rent,
+    rf,
+    perNLA,
+    perGLA,
+    totalFit,
+    ner1,
+    ner2,
+    ner3,
+    ner4,
+    totalHeadline,
+    totalRentFrees,
+    totalAgentFees,
+    totalUnforeseen,
+  } = calculateNER(f);
 
   /* Sync Fit-outs */
 useEffect(() => {
 
   if (!isLoaded) return;   // ✅ verhindert falsches Überschreiben beim Laden
 
-  const nNLA = clamp(P(f.fitPerNLA));
-  const nGLA = clamp(P(f.fitPerGLA));
-  const nTot = clamp(P(f.fitTot));
-
-  if (f.fitMode === "perNLA") {
-    const t = nNLA * nla;
-    const g = gla > 0 ? t / gla : 0;
-
-    if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
-    if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
-
-  } else if (f.fitMode === "perGLA") {
-    const t = nGLA * gla;
-    const n = nla > 0 ? t / nla : 0;
-
-    if (Math.abs(t - nTot) > 1e-9) S("fitTot")(String(t));
-    if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
-
-  } else {
-    const n = nla > 0 ? nTot / nla : 0;
-    const g = gla > 0 ? nTot / gla : 0;
-
-    if (Math.abs(n - nNLA) > 1e-9) S("fitPerNLA")(String(n));
-    if (Math.abs(g - nGLA) > 1e-9) S("fitPerGLA")(String(g));
+  const updates = getFitOutSyncUpdates(f);
+  if (Object.keys(updates).length > 0) {
+    setF((s) => ({ ...s, ...updates }));
   }
 
-}, [isLoaded, f.fitMode, f.nla, f.addon, f.fitPerNLA, f.fitPerGLA, f.fitTot, gla, nla]);
-
-  const totalFit = f.fitMode === "perNLA" ? perNLA * nla : f.fitMode === "perGLA" ? perGLA * gla : tot;
-  const agentFees = agent * rent * gla;
-  const denom = Math.max(1e-9, duration * gla);
-
-  const ner1 = gross / denom;
-  const ner2 = (gross - totalFit) / denom;
-  const ner3 = (gross - totalFit - agentFees) / denom;
-  const ner4 = (gross - totalFit - agentFees + unforeseen) / denom;
-
-  const totalHeadline = rent * gla * duration;
-  const totalRentFrees = rent * gla * rf;
-  const totalAgentFees = agentFees;
-  const totalUnforeseen = unforeseen;
-
-  const calcScenarioNER = (vals) => {
-    const nlaS = clamp(P(vals.nla ?? f.nla));
-    const addonS = clamp(P(vals.addon ?? f.addon));
-    const glaS = nlaS * (1 + addonS / 100);
-
-    const rentS = clamp(P(vals.rent ?? f.rent));
-    const durationS = Math.max(0, Math.floor(P(vals.duration ?? f.duration)));
-    const rfS = clamp(P(vals.rf ?? f.rf));
-    const agentS = clamp(P(vals.agent ?? f.agent));
-    const unforeseenS =  vals.unforeseen !== undefined    ? P(vals.unforeseen)    : P(f.unforeseen);
-
-    const monthsS = Math.max(0, durationS - rfS);
-    const grossS = rentS * glaS * monthsS;
-
-    // Fit-Out abhängig vom gewählten Mode (NLA / GLA / Total) für die Szenarien
-     const fitModeS = f.fitMode;
-
-    let fitS = 0;
-
-    if (fitModeS === "perNLA") {
-      const perNLAS = clamp(P(vals.fitPerNLA ?? f.fitPerNLA));
-      fitS = perNLAS * nlaS;
-    } else if (fitModeS === "perGLA") {
-      const perGLAS = clamp(P(vals.fitPerGLA ?? f.fitPerGLA));
-      fitS = perGLAS * glaS;
-    } else {
-      fitS = clamp(P(vals.fitTot ?? f.fitTot));
-    }
-    
-    const agentFeesS = agentS * rentS * glaS;
-    const denomS = Math.max(1e-9, durationS * glaS);
-
-    return (grossS - fitS - agentFeesS + unforeseenS) / denomS;
-  };
+}, [isLoaded, f.fitMode, f.nla, f.addon, f.fitPerNLA, f.fitPerGLA, f.fitTot]);
 
   const NER_COLORS = ["#1e3a8a", "#2563eb", "#3b82f6", "#60a5fa"];
   const nerBars = [
@@ -366,10 +298,10 @@ useEffect(() => {
   wfData.push({ name: "UC", base: cur, delta: dUC, isTotal: false }); cur += dUC;
   wfData.push({ name: "Final NER", base: 0, delta: cur, isTotal: true });
 
-  const scenarioView = scenarios.map((sc) => {
-   const vals = { ...f, ...sc.overrides };
-    return { id: sc.id, ner: calcScenarioNER(vals) };
-  });
+  const scenarioView = scenarios.map((sc) => ({
+    id: sc.id,
+    ner: calculateScenarioNER(f, sc.overrides),
+  }));
 
   /* Exports */
   const pageRef = useRef(null);
