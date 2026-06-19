@@ -80,20 +80,32 @@ function ScenarioDelta({ base, val }) {
   );
 }
 
-const scenarioResultCellStyle = (base, val) => {
-  const diff = val - base;
+const scenarioResultCellStyle = (scenario, allScenarios, base) => {
+  const diff = scenario.ner - base;
   if (Math.abs(diff) < 0.005) return { backgroundColor: "#2563eb", color: "#ffffff" };
 
-  const absoluteDelta = Math.abs(diff);
-  const intensity = Math.min(Math.sqrt(absoluteDelta / 5), 1);
-  const hue = diff > 0 ? 142 : 0;
-  const saturation = diff > 0 ? 78 : 86;
-  const lightness = diff > 0 ? 90 - intensity * 55 : 92 - intensity * 52;
+  const greenSteps = [
+    { backgroundColor: "#bbf7d0", color: "#052e16" },
+    { backgroundColor: "#22c55e", color: "#052e16" },
+    { backgroundColor: "#15803d", color: "#ffffff" },
+  ];
+  const redSteps = [
+    { backgroundColor: "#fecaca", color: "#450a0a" },
+    { backgroundColor: "#ef4444", color: "#ffffff" },
+    { backgroundColor: "#b91c1c", color: "#ffffff" },
+  ];
 
-  return {
-    backgroundColor: `hsl(${hue} ${saturation}% ${lightness}%)`,
-    color: lightness > 66 ? "#111827" : "#ffffff",
-  };
+  const isBetter = diff > 0;
+  const group = allScenarios.filter((sv) =>
+    isBetter ? sv.ner - base > 0.005 : base - sv.ner > 0.005
+  );
+  const sortedValues = [...new Set(group.map((sv) => F(sv.ner, 4)))].sort((a, b) =>
+    isBetter ? Number(a) - Number(b) : Number(b) - Number(a)
+  );
+  const rank = Math.max(0, sortedValues.indexOf(F(scenario.ner, 4)));
+  const step = sortedValues.length === 1 ? 2 : sortedValues.length === 2 ? rank + 1 : Math.min(rank, 2);
+
+  return isBetter ? greenSteps[step] : redSteps[step];
 };
 
 function NumericField({
@@ -878,7 +890,7 @@ return (
                 <td className="border p-3 bg-blue-600 text-white">FINAL NER (€/sqm)</td>
                 <td className="border p-3 text-right bg-blue-600 text-white">{F(ner4, 2)} €</td>
                 {scenarioView.map((sv) => (
-                  <td key={sv.id} className="border p-3 text-right" style={scenarioResultCellStyle(ner4, sv.ner)}>{F(sv.ner, 2)} €</td>
+                  <td key={sv.id} className="border p-3 text-right" style={scenarioResultCellStyle(sv, scenarioView, ner4)}>{F(sv.ner, 2)} €</td>
                 ))}
               </tr>
               <tr className="bg-white text-sm">
