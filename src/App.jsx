@@ -80,6 +80,21 @@ function ScenarioDelta({ base, val }) {
   );
 }
 
+const scenarioResultCellClass = (base, val) => {
+  const diff = val - base;
+  const pct = Math.abs(base) > 1e-9 ? Math.abs((diff / Math.abs(base)) * 100) : 0;
+
+  if (Math.abs(diff) < 0.005) return "bg-blue-600 text-white";
+  if (diff > 0) {
+    if (pct >= 10) return "bg-green-700 text-white";
+    if (pct >= 5) return "bg-green-600 text-white";
+    return "bg-green-500 text-white";
+  }
+  if (pct >= 10) return "bg-red-700 text-white";
+  if (pct >= 5) return "bg-red-600 text-white";
+  return "bg-red-500 text-white";
+};
+
 function NumericField({
   label,
   value,
@@ -858,11 +873,11 @@ return (
                   </td>
                 ))}
               </tr>
-              <tr className="bg-blue-600 text-white font-bold text-lg">
-                <td className="border p-3">FINAL NER (€/sqm)</td>
-                <td className="border p-3 text-right">{F(ner4, 2)} €</td>
+              <tr className="font-bold text-lg">
+                <td className="border p-3 bg-blue-600 text-white">FINAL NER (€/sqm)</td>
+                <td className="border p-3 text-right bg-blue-600 text-white">{F(ner4, 2)} €</td>
                 {scenarioView.map((sv) => (
-                  <td key={sv.id} className="border p-3 text-right">{F(sv.ner, 2)} €</td>
+                  <td key={sv.id} className={`border p-3 text-right ${scenarioResultCellClass(ner4, sv.ner)}`}>{F(sv.ner, 2)} €</td>
                 ))}
               </tr>
               <tr className="bg-white text-sm">
