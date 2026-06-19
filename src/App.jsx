@@ -11,6 +11,8 @@ import {
   Cell,
 } from "recharts";
 import { toPng } from "html-to-image";
+import { NumericField, ScenarioField } from "./components/NumericFields";
+import { clamp, F, FCUR, FCUR0, P, safe } from "./utils/format";
 
 /* ---- CONSTANTS ---- */
 const BASE_H = 20;
@@ -18,45 +20,7 @@ const BASE_B = 10;
 const FIT_EXTRA = -27;
 const WF_TOP_LABEL_Y = 62;
 
-/* ---------- UTILS ---------- */
-const clamp = (n, min = 0) => (Number.isFinite(n) ? Math.max(min, n) : 0);
-const safe = (n) => (Number.isFinite(n) ? n : 0);
-const P = (v) => {
-  let s = String(v ?? "").trim().replace(/\s/g, "");
-  const hasDot = s.includes(".");
-  const c = (s.match(/,/g) || []).length;
-  s = !hasDot && c === 1 ? s.replace(",", ".") : s.replace(/,/g, "");
-  const n = parseFloat(s);
-  return Number.isFinite(n) ? n : 0;
-};
-const F = (n, d = 2) =>
-  new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: d,
-    maximumFractionDigits: d,
-  }).format(Number.isFinite(n) ? n : 0);
-const FCUR = (n) =>
-  (Number.isFinite(n) ? n : 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "EUR",
-  });
-const FCUR0 = (n) =>
-  (Number.isFinite(n) ? n : 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
 /* ---------- COMPONENTS ---------- */
-function Money({ value }) {
-  let cls = "text-gray-900 font-medium";
-
-  if (value > 0) cls = "text-red-600 font-medium";     // Cost
-  if (value < 0) cls = "text-green-600 font-medium";   // Compensation
-
-  return <span className={cls}>{FCUR(value)}</span>;
-}
-
 function Delta({ base, val }) {
   const pct = base > 0 ? ((val - base) / base) * 100 : 0;
   const up = pct > 0, down = pct < 0, sign = pct > 0 ? "+" : "";
@@ -107,98 +71,6 @@ const scenarioResultCellStyle = (scenario, allScenarios, base) => {
 
   return isBetter ? greenSteps[step] : redSteps[step];
 };
-
-function NumericField({
-  label,
-  value,
-  onChange,
-  format = "2dec",
-  step = 1,
-  min = 0,
-  readOnly = false,
-  onCommit,
-  suffix,
-  colorize = false, 
-}) {
-  const [focus, setFocus] = useState(false);
-  const inputRef = useRef(null);
-  const num = P(value);
-  const show = focus ? value : format === "int" ? F(num, 0) : format === "1dec" ? F(num, 1) : F(num, 2);
-
-  return (
-    <label className="block">
-      <span className="text-gray-700">{label}</span>
-      <div className="relative">
-        <input
-          ref={inputRef}
-          type="text"
-          inputMode="decimal"
-          value={show}
-          readOnly={readOnly}
-          onFocus={() => {
-            setFocus(true);
-            requestAnimationFrame(() => {
-              inputRef.current?.select();
-            });
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-              e.preventDefault();
-              const delta = e.key === "ArrowUp" ? step : -step;
-              const next = clamp(P(value) + delta, min);
-              onChange(String(next));
-            }
-          }}
-          onBlur={(e) => {
-            setFocus(false);
-            const n = clamp(P(e.target.value), min);
-            onChange(String(n));
-            onCommit?.(n);
-          }}
-          onChange={(e) => onChange(e.target.value.replace(/[^\d.,-]/g, ""))}
-          className={`mt-1 block w-full border rounded-md p-2 pr-16 
-  ${readOnly ? "bg-gray-100 text-gray-600" : ""}
-  ${colorize && P(value) > 0 ? "text-green-600" : ""}
-  ${colorize && P(value) < 0 ? "text-red-600" : ""}
-`}
-        />
-        {suffix && (
-          <span className="absolute inset-y-0 right-3 top-1/2 -translate-y-1/2 text-gray-500">
-            {suffix}
-          </span>
-        )}
-      </div>
-    </label>
-  );
-}
-
-function ScenarioField({ value, onChange, readOnly = false, bold = false }) {
-  const [focus, setFocus] = useState(false);
-  const inputRef = useRef(null);
-  const num = P(value);
-  const show = focus ? value : F(num, 2);
-
-  return (
-    <input
-      ref={inputRef}
-      type="text"
-      inputMode="decimal"
-      value={show}
-      readOnly={readOnly}
-      onFocus={() => {
-        setFocus(true);
-        requestAnimationFrame(() => inputRef.current?.select());
-      }}
-      onBlur={(e) => {
-        setFocus(false);
-        const n = P(e.target.value);
-        onChange?.(String(n));
-      }}
-      onChange={(e) => onChange?.(e.target.value.replace(/[^\d.,-]/g, ""))}
-      className={`  w-full border rounded-md p-2 text-right tabular-nums  ${readOnly ? "bg-gray-100 text-gray-800" : ""}  ${bold ? "font-bold" : ""}`}
-    />
-  );
-}
 
 /* ---------- CHART LABELS ---------- */
 const PercentLabel = ({ x, y, width, value }) => {
