@@ -455,7 +455,7 @@ return (
                   <input readOnly value={F(gla, 2)} className="mt-1 block w-full border rounded-md p-2 bg-gray-100 text-gray-600" />
                 </label>
                 <NumericField label="Headline Rent €/sqm" value={f.rent} onChange={S("rent")} step={0.5} />
-                <NumericField label="Lease Term (months)" value={f.duration} onChange={S("duration")} format="int" />
+                <NumericField  label="Lease Term (months)"  value={f.duration}  onChange={S("duration")}  step={0.01}/>
                 <NumericField label="Rent-Free (months)" value={f.rf} onChange={S("rf")} />
               </div>
 
