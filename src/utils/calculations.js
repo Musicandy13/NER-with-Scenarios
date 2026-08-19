@@ -5,7 +5,7 @@ const readInputs = (form) => {
   const addon = clamp(P(form.addon));
   const gla = nla * (1 + addon / 100);
   const rent = clamp(P(form.rent));
-  const duration = Math.max(0, Math.floor(P(form.duration)));
+  const duration = Math.max(0, P(form.duration));
   const rf = clamp(P(form.rf));
   const agent = clamp(P(form.agent));
   const unforeseen = P(form.unforeseen);
