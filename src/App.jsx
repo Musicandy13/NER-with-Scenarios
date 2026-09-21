@@ -746,12 +746,12 @@ return (
               target="_blank"
               rel="noreferrer"
               aria-label="NER on the App Store"
-              className="transition-opacity hover:opacity-80"
+              className="block h-14 w-52 overflow-hidden rounded-lg transition-opacity hover:opacity-80"
             >
               <img
                 src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
                 alt="Download on the App Store"
-                className="h-14 w-52"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "fill" }}
               />
             </a>
             <a
@@ -759,12 +759,12 @@ return (
               target="_blank"
               rel="noreferrer"
               aria-label="NER on Google Play"
-              className="transition-opacity hover:opacity-80"
+              className="block h-14 w-52 overflow-hidden rounded-lg transition-opacity hover:opacity-80"
             >
               <img
                 src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                 alt="Get it on Google Play"
-                className="h-14 w-52"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "fill" }}
               />
             </a>
           </div>
