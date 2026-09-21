@@ -746,20 +746,26 @@ return (
               target="_blank"
               rel="noreferrer"
               aria-label="NER on the App Store"
-              className="inline-flex min-w-36 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50"
+              className="transition-opacity hover:opacity-80"
             >
-              <img src="https://cdn.simpleicons.org/apple/111827" alt="" aria-hidden="true" className="h-5 w-5" />
-              App Store
+              <img
+                src="https://api.iconify.design/logos:apple-app-store.svg"
+                alt="App Store"
+                className="h-14 w-14"
+              />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc"
               target="_blank"
               rel="noreferrer"
               aria-label="NER on Google Play"
-              className="inline-flex min-w-36 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50"
+              className="transition-opacity hover:opacity-80"
             >
-              <img src="https://cdn.simpleicons.org/googleplay/111827" alt="" aria-hidden="true" className="h-5 w-5" />
-              Google Play
+              <img
+                src="https://api.iconify.design/logos:google-play-icon.svg"
+                alt="Google Play"
+                className="h-14 w-14"
+              />
             </a>
           </div>
         </section>
