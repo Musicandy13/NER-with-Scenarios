@@ -740,7 +740,7 @@ return (
 
         <section className="mt-6 border-t pt-6 text-center">
           <p className="text-sm font-semibold text-gray-700">Download the NER app</p>
-          <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-3 flex flex-row items-center justify-center gap-3">
             <a
               href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140"
               target="_blank"
