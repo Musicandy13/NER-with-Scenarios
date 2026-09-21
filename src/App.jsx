@@ -762,7 +762,7 @@ return (
               <img
                 src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                 alt="Get it on Google Play"
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             </a>
           </div>
