@@ -193,9 +193,9 @@ export default function App() {
       ? "https://apps.apple.com/at/app/ner-net-effective-rent/id6769180140"
       : isAndroid
         ? "https://play.google.com/store/apps/details?id=com.yourcompany.nercalc&hl=en"
-        : "/";
+        : null;
 
-    window.location.replace(destination);
+    if (destination) window.location.replace(destination);
   }, [isSmartLink]);
   const [f, setF] = useState({
     tenant: "",
@@ -385,11 +385,8 @@ if (isSmartLink) {
   return (
     <main className="min-h-screen grid place-items-center bg-slate-50 px-6 text-center">
       <section className="max-w-md rounded-2xl bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Opening NER</h1>
-        <p className="mt-3 text-slate-600">Taking you to the right app store…</p>
-        <p className="mt-6 text-sm text-slate-500">
-          If nothing opens, <a className="font-semibold text-blue-700 underline" href="/">open the NER calculator</a>.
-        </p>
+        <h1 className="text-2xl font-bold text-slate-900">NER App</h1>
+        <p className="mt-3 text-slate-600">Open this link on an iPhone or Android phone to reach the right app store.</p>
       </section>
     </main>
   );
