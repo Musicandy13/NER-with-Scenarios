@@ -737,6 +737,28 @@ return (
             </tbody>
           </table>
         </div>
+
+        <section className="mt-6 border-t pt-6 text-center">
+          <p className="text-sm font-semibold text-gray-700">Download the NER app</p>
+          <div className="mt-3 flex flex-col justify-center gap-3 sm:flex-row">
+            <a
+              href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg bg-black px-5 py-3 text-sm font-bold text-white transition hover:bg-gray-800"
+            >
+              Download on the App Store
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg bg-green-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-800"
+            >
+              Get it on Google Play
+            </a>
+          </div>
+        </section>
       </div>
     </div>
   );
