@@ -749,9 +749,9 @@ return (
               className="transition-opacity hover:opacity-80"
             >
               <img
-                src="https://api.iconify.design/logos:apple-app-store.svg"
-                alt="App Store"
-                className="h-14 w-14"
+                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                alt="Download on the App Store"
+                className="h-14 w-52"
               />
             </a>
             <a
@@ -762,9 +762,9 @@ return (
               className="transition-opacity hover:opacity-80"
             >
               <img
-                src="https://api.iconify.design/logos:google-play-icon.svg"
-                alt="Google Play"
-                className="h-14 w-14"
+                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                alt="Get it on Google Play"
+                className="h-14 w-52"
               />
             </a>
           </div>
