@@ -745,25 +745,17 @@ return (
               href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140"
               target="_blank"
               rel="noreferrer"
-              aria-label="Download NER on the App Store"
+              className="inline-flex min-w-36 items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50"
             >
-              <img
-                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                alt="Download on the App Store"
-                className="h-12 w-auto"
-              />
+              App Store
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc"
               target="_blank"
               rel="noreferrer"
-              aria-label="Get NER on Google Play"
+              className="inline-flex min-w-36 items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50"
             >
-              <img
-                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-                alt="Get it on Google Play"
-                className="h-[72px] w-auto"
-              />
+              Google Play
             </a>
           </div>
         </section>
