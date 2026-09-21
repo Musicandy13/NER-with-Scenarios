@@ -176,8 +176,27 @@ function WaterfallChart({ data, isExporting }) {
 
 /* ---------- APP ---------- */
 export default function App() {
-  const isAppleSupport =
-  window.location.pathname === "/apple-support";
+  const pathname = window.location.pathname;
+  const isAppleSupport = pathname === "/apple-support";
+  const isSmartLink = pathname === "/get";
+
+  useEffect(() => {
+    if (!isSmartLink) return;
+
+    const userAgent = navigator.userAgent || "";
+    const isAndroid = /Android/i.test(userAgent);
+    const isIOS =
+      /iPad|iPhone|iPod/i.test(userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    const destination = isIOS
+      ? "https://apps.apple.com/at/app/ner-net-effective-rent/id6769180140"
+      : isAndroid
+        ? "https://play.google.com/store/apps/details?id=com.yourcompany.nercalc&hl=en"
+        : "/";
+
+    window.location.replace(destination);
+  }, [isSmartLink]);
   const [f, setF] = useState({
     tenant: "",
     nla: "1000",
@@ -361,6 +380,20 @@ useEffect(() => {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+if (isSmartLink) {
+  return (
+    <main className="min-h-screen grid place-items-center bg-slate-50 px-6 text-center">
+      <section className="max-w-md rounded-2xl bg-white p-8 shadow-sm">
+        <h1 className="text-2xl font-bold text-slate-900">Opening NER</h1>
+        <p className="mt-3 text-slate-600">Taking you to the right app store…</p>
+        <p className="mt-6 text-sm text-slate-500">
+          If nothing opens, <a className="font-semibold text-blue-700 underline" href="/">open the NER calculator</a>.
+        </p>
+      </section>
+    </main>
+  );
+}
 
 if (isAppleSupport) {
   return (
