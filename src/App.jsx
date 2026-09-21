@@ -740,22 +740,30 @@ return (
 
         <section className="mt-6 border-t pt-6 text-center">
           <p className="text-sm font-semibold text-gray-700">Download the NER app</p>
-          <div className="mt-3 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
               href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140"
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg bg-black px-5 py-3 text-sm font-bold text-white transition hover:bg-gray-800"
+              aria-label="Download NER on the App Store"
             >
-              Download on the App Store
+              <img
+                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                alt="Download on the App Store"
+                className="h-12 w-auto"
+              />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc"
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg bg-green-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-800"
+              aria-label="Get NER on Google Play"
             >
-              Get it on Google Play
+              <img
+                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                alt="Get it on Google Play"
+                className="h-12 w-auto"
+              />
             </a>
           </div>
         </section>
