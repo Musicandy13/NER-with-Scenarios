@@ -195,7 +195,7 @@ export default function App() {
         ? "https://play.google.com/store/apps/details?id=com.yourcompany.nercalc&hl=en"
         : null;
 
-    if (destination) window.location.replace(destination);
+    window.location.replace(destination || "/");
   }, [isSmartLink]);
   const [f, setF] = useState({
     tenant: "",
