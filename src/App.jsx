@@ -495,7 +495,7 @@ return (
     <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
       <div
         ref={pageRef}
-        className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
+        className="mx-auto w-[calc(100%-2rem)] max-w-[1600px] bg-white p-6 rounded-xl shadow-md"
         style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
       >
         {/* EXPORT-BEREICH 1: Alles außer der großen Tabelle */}
