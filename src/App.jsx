@@ -776,6 +776,11 @@ return (
             </a>
           </div>
         </section>
+
+        <footer className="mt-8 border-t pt-5 text-center text-sm text-slate-500">
+          <p className="font-semibold text-slate-700">SquareMetrix AI</p>
+          <p className="mt-1">The brand behind NER — Net Effective Rent Calculator.</p>
+        </footer>
       </div>
     </div>
   );
