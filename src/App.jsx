@@ -534,7 +534,7 @@ return (
               </div>
 
               {/* Fit-Out Block */}
-              <div className="border rounded-md p-3 bg-gray-50/50">
+              <div className="rounded-lg border border-sky-200 bg-sky-50 p-4 shadow-sm">
                 <div className="flex flex-wrap items-center gap-4 mb-3">
                   <span className="text-gray-700 font-bold text-sm">Fit-Out Input:</span>
                   <label className="inline-flex items-center gap-1 text-sm cursor-pointer">
