@@ -178,6 +178,7 @@ function WaterfallChart({ data, isExporting }) {
 export default function App() {
   const pathname = window.location.pathname;
   const isAppleSupport = pathname === "/apple-support";
+  const isPrivacyPolicy = pathname === "/privacy";
   const isSmartLink = pathname === "/get";
 
   useEffect(() => {
@@ -388,6 +389,49 @@ if (isSmartLink) {
         <h1 className="text-2xl font-bold text-slate-900">NER App</h1>
         <p className="mt-3 text-slate-600">Open this link on an iPhone or Android phone to reach the right app store.</p>
       </section>
+    </main>
+  );
+}
+
+if (isPrivacyPolicy) {
+  return (
+    <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-700">
+      <article className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-sm sm:p-12">
+        <a href="/" className="text-sm font-semibold text-sky-700 hover:underline">← Back to NER Calculator</a>
+        <h1 className="mt-6 text-3xl font-bold text-slate-900">Privacy Policy for NER – Net Effective Rent</h1>
+        <p className="mt-2 text-sm text-slate-500">Last updated: 23 September 2026</p>
+
+        <div className="mt-8 space-y-6 leading-7">
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">1. Overview</h2>
+            <p>SquareMetrix AI operates the NER – Net Effective Rent application and this website. This policy explains how information is handled.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">2. Calculations and accounts</h2>
+            <p>NER does not require an account. Lease calculations are performed locally on your device or in your browser. We do not receive the lease figures you enter into the calculator.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">3. Advertising and data sharing</h2>
+            <p>NER does not display third-party advertising. We do not sell or share personal information for advertising purposes.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">4. Platform and technical data</h2>
+            <p>App-store and in-app-purchase platforms may process device or other identifiers to provide their services. Our website is hosted by Cloudflare, which may process technical connection data necessary to deliver and secure the site.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">5. Children’s privacy</h2>
+            <p>NER is intended for business and professional users and is not directed to children.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">6. Changes to this policy</h2>
+            <p>We may update this policy when the app or website changes. The current version will always be available on this page.</p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold text-slate-900">7. Contact</h2>
+            <p>For questions about this policy, contact <a className="font-semibold text-sky-700 hover:underline" href="mailto:support@squaremetrix.ai">support@squaremetrix.ai</a>.</p>
+          </section>
+        </div>
+      </article>
     </main>
   );
 }
@@ -780,6 +824,7 @@ return (
         <footer className="mt-8 border-t pt-5 text-center text-sm text-slate-500">
           <p className="font-semibold text-slate-700">SquareMetrix AI</p>
           <p className="mt-1">The brand behind NER — Net Effective Rent Calculator.</p>
+          <a href="/privacy" className="mt-3 inline-block font-medium text-sky-700 hover:underline">Privacy Policy</a>
         </footer>
       </div>
     </div>
