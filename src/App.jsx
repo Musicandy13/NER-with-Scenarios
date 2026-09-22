@@ -764,7 +764,14 @@ return (
               <img
                 src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                 alt="Get it on Google Play"
-                style={{ display: "block", width: "100%", height: "100%", objectFit: "fill" }}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "fill",
+                  transform: "scaleX(0.88) scaleY(1.42)",
+                  transformOrigin: "center",
+                }}
               />
             </a>
           </div>
