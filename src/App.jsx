@@ -418,17 +418,41 @@ if (isAppleSupport) {
   );
 }
 return (
-    <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
+    <div className="smx-app-shell min-h-screen pb-10">
+      <header className="smx-header">
+        <a className="smx-brand" href="https://www.squaremetrix.com/" aria-label="SquareMetrix AI home">
+          <img src="/squaremetrix-cube.webp" width="52" height="52" alt="" />
+          <span>SquareMetrix<span> AI</span></span>
+        </a>
+        <div className="smx-header-meta">
+          <span>Professional lease analysis</span>
+          <a href="https://www.squaremetrix.com/" target="_blank" rel="noopener noreferrer">
+            SquareMetrix AI <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </header>
+
+      <div className="smx-intro">
+        <div className="smx-eyebrow"><span aria-hidden="true"></span> REAL ESTATE. REAL TOOLS.</div>
+        <div className="smx-intro-row">
+          <div>
+            <h1>Net Effective Rent<br /><span>Calculator.</span></h1>
+            <p>From lease terms to net effective rent — in seconds.</p>
+          </div>
+          <img className="smx-ner-logo" src="/ner-logo.png" width="82" height="80" alt="NER app icon" />
+        </div>
+      </div>
+
       <div
         ref={pageRef}
-        className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
-        style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
+        className="smx-calculator p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
       >
         {/* EXPORT-BEREICH 1: Alles außer der großen Tabelle */}
         <div ref={calculatorRef}>
           {/* HEADER */}
           <div ref={mainContentRef}>
-            <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
+            <div className="smx-calculator-kicker">LEASE ANALYSIS WORKSPACE</div>
+            <h2 className="text-3xl font-bold mb-2 text-center">
               Net Effective Rent (NER) Calculator
             </h2>
             <div className="mb-4 flex justify-center">
@@ -708,6 +732,12 @@ return (
           </table>
         </div>
       </div>
+
+      <footer className="smx-footer">
+        <a href="https://www.squaremetrix.com/">SquareMetrix<span> AI</span></a>
+        <p>Practical apps. Better-informed decisions.</p>
+        <span>© 2026 SquareMetrix AI</span>
+      </footer>
     </div>
   );
 }
