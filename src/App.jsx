@@ -309,7 +309,7 @@ useEffect(() => {
   const resultsContentRef = useRef(null);
   const calculatorRef = useRef(null);
 
-  const exportNode = async (node, filename) => {
+  const exportNode = async (node, filename, { padding = 0 } = {}) => {
     if (!node) return;
     try {
       setIsExporting(true);
@@ -317,15 +317,25 @@ useEffect(() => {
       const rect = node.getBoundingClientRect();
       const w = Math.ceil(Math.max(rect.width, node.scrollWidth));
       const h = Math.ceil(Math.max(rect.height, node.scrollHeight));
+      const exportWidth = w + padding * 2;
+      const exportHeight = h + padding * 2;
       const dataUrl = await toPng(node, {
         cacheBust: true,
         pixelRatio: 3,
         backgroundColor: "#ffffff",
-        width: w,
-        height: h,
-        canvasWidth: w,
-        canvasHeight: h,
-        style: { width: `${w}px`, height: `${h}px`, margin: "0", overflow: "visible", boxShadow: "none" },
+        width: exportWidth,
+        height: exportHeight,
+        canvasWidth: exportWidth,
+        canvasHeight: exportHeight,
+        style: {
+          width: `${exportWidth}px`,
+          height: `${exportHeight}px`,
+          padding: `${padding}px`,
+          boxSizing: "border-box",
+          margin: "0",
+          overflow: "visible",
+          boxShadow: "none",
+        },
       });
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -341,7 +351,7 @@ useEffect(() => {
   const exportResultsPNG = async () => {
     if (!resultsContentRef.current) return;
     const fname = f.tenant?.trim() ? `${f.tenant.trim()}-results.png` : "ner-results.png";
-    await exportNode(resultsContentRef.current, fname);
+    await exportNode(resultsContentRef.current, fname, { padding: 12 });
   };
 
   const exportFullPNG = async () => {
