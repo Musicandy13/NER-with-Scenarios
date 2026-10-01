@@ -708,28 +708,7 @@ return (
           </table>
         </div>
       </div>
-      <section className="max-w-6xl mx-auto px-6 pb-8">
-        <div className="rounded-xl px-6 py-6 sm:px-8 sm:py-7 text-white shadow-lg" style={{ backgroundColor: "#071B41" }}>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-sky-300 mb-2">SquareMetrix AI</p>
-              <h2 className="text-xl sm:text-2xl font-bold">Take NER with you.</h2>
-              <p className="text-sm text-blue-100 mt-1">Get the Net Effective Rent Calculator app for your phone.</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="inline-flex items-center gap-3 rounded-lg border border-white/25 bg-white px-4 py-3 text-slate-900 hover:bg-blue-50 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="28" fill="currentColor" aria-hidden="true"><path d="M17.05 12.536c.031 3.232 2.835 4.307 2.866 4.321-.024.076-.448 1.532-1.477 3.036-.89 1.3-1.813 2.595-3.268 2.622-1.43.026-1.89-.848-3.525-.848-1.634 0-2.145.821-3.498.874-1.405.053-2.475-1.406-3.373-2.701-1.835-2.65-3.237-7.488-1.354-10.754.935-1.622 2.607-2.649 4.422-2.675 1.38-.026 2.683.927 3.526.927.842 0 2.423-1.147 4.08-.979.694.029 2.643.28 3.894 2.112-.101.063-2.325 1.353-2.293 4.065ZM14.364 4.606c.746-.903 1.248-2.16 1.111-3.411-1.075.043-2.375.716-3.146 1.619-.691.799-1.297 2.078-1.134 3.304 1.198.093 2.422-.609 3.169-1.512Z"/></svg>
-                <span className="text-left leading-tight"><small className="block text-[10px]">Download on the</small><strong className="text-sm">App Store</strong></span>
-              </a>
-              <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="inline-flex items-center gap-3 rounded-lg border border-white/25 bg-white px-4 py-3 text-slate-900 hover:bg-blue-50 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="28" aria-hidden="true"><path fill="#34A853" d="M3.1 2.8a2 2 0 0 0-.4 1.3v15.8c0 .5.1.9.4 1.3L14 12z"/><path fill="#4285F4" d="m3.1 2.8 12.4 7.3 3-3.1L5.1 2.1a1.7 1.7 0 0 0-2 .7"/><path fill="#FBBC04" d="m15.5 10.1 3.6 2.1-3.6 2.1-1.5-2.1z"/><path fill="#EA4335" d="m15.5 13.9-12.4 7.3a1.7 1.7 0 0 0 2 .7l13.4-4.9z"/></svg>
-                <span className="text-left leading-tight"><small className="block text-[10px]">Get it on</small><strong className="text-sm">Google Play</strong></span>
-              </a>
-            </div>
-          </div>
-          <div className="mt-5 pt-4 border-t border-white/15 text-xs text-blue-200"><a href="https://www.squaremetrix.com/" className="hover:text-white underline underline-offset-2">Explore SquareMetrix AI</a></div>
-        </div>
-      </section>
+
     </div>
   );
 }
