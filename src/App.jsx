@@ -745,13 +745,17 @@ return (
 
       <section className="max-w-6xl mx-auto px-6 pb-5" aria-labelledby="ner-app-download-title">
         <div className="border-y border-slate-200 py-5 text-center">
-          <p id="ner-app-download-title" className="mb-3 text-sm font-semibold text-white">Download the NER app</p>
-          <div className="grid w-full max-w-[300px] grid-cols-2 items-center gap-8 mx-auto">
-            <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="flex justify-center">
-              <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" className="h-11 w-auto" />
+          <p id="ner-app-download-title" className="mb-3 text-sm font-normal text-white">Download the NER app</p>
+          <div className="mx-auto grid w-full max-w-[600px] grid-cols-2 gap-3">
+            <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="flex min-h-12 w-full items-center justify-center gap-3 rounded border border-[#52729e] px-3 py-2 text-left text-base text-white transition-colors hover:bg-[#123664]">
+              <svg className="h-7 w-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.05 12.536c.031 3.232 2.835 4.307 2.866 4.321-.024.076-.448 1.532-1.477 3.036-.89 1.3-1.813 2.595-3.268 2.622-1.43.026-1.89-.848-3.525-.848-1.634 0-2.145.821-3.498.874-1.405.053-2.475-1.406-3.373-2.701-1.835-2.65-3.237-7.488-1.354-10.754.935-1.622 2.607-2.649 4.422-2.675 1.38-.026 2.683.927 3.526.927.842 0 2.423-1.147 4.08-.979.694.029 2.643.28 3.894 2.112-.101.063-2.325 1.353-2.293 4.065ZM14.364 4.606c.746-.903 1.248-2.16 1.111-3.411-1.075.043-2.375.716-3.146 1.619-.691.799-1.297 2.078-1.134 3.304 1.198.093 2.422-.609 3.169-1.512Z"/></svg>
+              <span><span className="block text-[10px] leading-none text-[#b5c8e6]">Download on the</span><span className="block leading-tight">App Store</span></span>
+              <span aria-hidden="true" className="ml-1 text-xs">↗</span>
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="flex justify-center">
-              <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" className="h-11 w-auto" />
+            <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="flex min-h-12 w-full items-center justify-center gap-3 rounded border border-[#52729e] px-3 py-2 text-left text-base text-white transition-colors hover:bg-[#123664]">
+              <span aria-hidden="true" className="shrink-0 text-2xl leading-none">▷</span>
+              <span><span className="block text-[10px] leading-none text-[#b5c8e6]">Get it on</span><span className="block leading-tight">Google Play</span></span>
+              <span aria-hidden="true" className="ml-1 text-xs">↗</span>
             </a>
           </div>
         </div>
