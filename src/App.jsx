@@ -745,12 +745,12 @@ return (
 
       <section className="max-w-6xl mx-auto px-6 pb-5" aria-labelledby="ner-app-download-title">
         <div className="border-y border-slate-200 py-5 text-center">
-          <p id="ner-app-download-title" className="mb-3 text-sm text-[#005CA9]">Download the NER app</p>
-          <div className="flex items-center justify-center gap-10">
-            <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store">
+          <p id="ner-app-download-title" className="mb-3 text-sm font-semibold text-white">Download the NER app</p>
+          <div className="grid w-full max-w-[300px] grid-cols-2 items-center gap-8 mx-auto">
+            <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="flex justify-center">
               <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" className="h-11 w-auto" />
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play">
+            <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="flex justify-center">
               <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" className="h-11 w-auto" />
             </a>
           </div>
