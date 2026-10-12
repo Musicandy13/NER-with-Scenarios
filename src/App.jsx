@@ -309,7 +309,7 @@ useEffect(() => {
   const resultsContentRef = useRef(null);
   const calculatorRef = useRef(null);
 
-  const exportNode = async (node, filename) => {
+  const exportNode = async (node, filename, { padding = 0 } = {}) => {
     if (!node) return;
     try {
       setIsExporting(true);
@@ -317,15 +317,25 @@ useEffect(() => {
       const rect = node.getBoundingClientRect();
       const w = Math.ceil(Math.max(rect.width, node.scrollWidth));
       const h = Math.ceil(Math.max(rect.height, node.scrollHeight));
+      const exportWidth = w + padding * 2;
+      const exportHeight = h + padding * 2;
       const dataUrl = await toPng(node, {
         cacheBust: true,
         pixelRatio: 3,
         backgroundColor: "#ffffff",
-        width: w,
-        height: h,
-        canvasWidth: w,
-        canvasHeight: h,
-        style: { width: `${w}px`, height: `${h}px`, margin: "0", overflow: "visible", boxShadow: "none" },
+        width: exportWidth,
+        height: exportHeight,
+        canvasWidth: exportWidth,
+        canvasHeight: exportHeight,
+        style: {
+          width: `${exportWidth}px`,
+          height: `${exportHeight}px`,
+          padding: `${padding}px`,
+          boxSizing: "border-box",
+          margin: "0",
+          overflow: "visible",
+          boxShadow: "none",
+        },
       });
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -341,7 +351,7 @@ useEffect(() => {
   const exportResultsPNG = async () => {
     if (!resultsContentRef.current) return;
     const fname = f.tenant?.trim() ? `${f.tenant.trim()}-results.png` : "ner-results.png";
-    await exportNode(resultsContentRef.current, fname);
+    await exportNode(resultsContentRef.current, fname, { padding: 12 });
   };
 
   const exportFullPNG = async () => {
@@ -418,17 +428,41 @@ if (isAppleSupport) {
   );
 }
 return (
-    <div style={{ backgroundColor: "#005CA9" }} className="min-h-screen pb-10">
+    <div className="smx-app-shell min-h-screen pb-10">
+      <header className="smx-header">
+        <a className="smx-brand" href="https://www.squaremetrix.com/" aria-label="SquareMetrix AI home">
+          <img src="/squaremetrix-cube.webp" width="52" height="52" alt="" />
+          <span>SquareMetrix<span> AI</span></span>
+        </a>
+        <div className="smx-header-meta">
+          <span>Professional lease analysis</span>
+          <a href="https://www.squaremetrix.com/" target="_blank" rel="noopener noreferrer">
+            SquareMetrix AI <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </header>
+
+      <div className="smx-intro">
+        <div className="smx-eyebrow"><span aria-hidden="true"></span> REAL ESTATE. REAL TOOLS.</div>
+        <div className="smx-intro-row">
+          <div>
+            <h1>Net Effective Rent<br /><span>Calculator.</span></h1>
+            <p>From lease terms to net effective rent — in seconds.</p>
+          </div>
+          <img className="smx-ner-logo" src="/ner-logo.png" width="82" height="80" alt="NER app icon" />
+        </div>
+      </div>
+
       <div
         ref={pageRef}
-        className="p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
-        style={{ boxShadow: "0 10px 25px rgba(0,0,0,.08)" }}
+        className="smx-calculator p-6 max-w-6xl mx-auto bg-white rounded-xl shadow-md"
       >
         {/* EXPORT-BEREICH 1: Alles außer der großen Tabelle */}
         <div ref={calculatorRef}>
           {/* HEADER */}
           <div ref={mainContentRef}>
-            <h2 className="text-3xl font-bold mb-2 text-center" style={{ color: "#005CA9" }}>
+            <div className="smx-calculator-kicker">LEASE ANALYSIS WORKSPACE</div>
+            <h2 className="text-3xl font-bold mb-2 text-center">
               Net Effective Rent (NER) Calculator
             </h2>
             <div className="mb-4 flex justify-center">
@@ -709,6 +743,31 @@ return (
         </div>
       </div>
 
+      <section className="max-w-6xl mx-auto px-6 pb-5" aria-labelledby="ner-app-download-title">
+        <div className="border-y border-slate-200 py-5 text-center">
+          <p id="ner-app-download-title" className="mb-3 text-sm font-normal text-white">Download the NER app</p>
+          <div className="mx-auto grid w-full max-w-[600px] grid-cols-2 gap-3">
+            <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="flex min-h-12 w-full items-center justify-center gap-3 rounded border border-[#52729e] px-3 py-2 text-left text-base text-white transition-colors hover:bg-[#123664]">
+              <svg className="h-7 w-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.05 12.536c.031 3.232 2.835 4.307 2.866 4.321-.024.076-.448 1.532-1.477 3.036-.89 1.3-1.813 2.595-3.268 2.622-1.43.026-1.89-.848-3.525-.848-1.634 0-2.145.821-3.498.874-1.405.053-2.475-1.406-3.373-2.701-1.835-2.65-3.237-7.488-1.354-10.754.935-1.622 2.607-2.649 4.422-2.675 1.38-.026 2.683.927 3.526.927.842 0 2.423-1.147 4.08-.979.694.029 2.643.28 3.894 2.112-.101.063-2.325 1.353-2.293 4.065ZM14.364 4.606c.746-.903 1.248-2.16 1.111-3.411-1.075.043-2.375.716-3.146 1.619-.691.799-1.297 2.078-1.134 3.304 1.198.093 2.422-.609 3.169-1.512Z"/></svg>
+              <span><span className="block text-[10px] leading-none text-[#b5c8e6]">Download on the</span><span className="block leading-tight">App Store</span></span>
+              <span aria-hidden="true" className="ml-1 text-xs">↗</span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="flex min-h-12 w-full items-center justify-center gap-3 rounded border border-[#52729e] px-3 py-2 text-left text-base text-white transition-colors hover:bg-[#123664]">
+              <span aria-hidden="true" className="shrink-0 text-2xl leading-none">▷</span>
+              <span><span className="block text-[10px] leading-none text-[#b5c8e6]">Get it on</span><span className="block leading-tight">Google Play</span></span>
+              <span aria-hidden="true" className="ml-1 text-xs">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+
+
+      <footer className="smx-footer">
+        <a href="https://www.squaremetrix.com/">SquareMetrix<span> AI</span></a>
+        <p>Practical apps. Better-informed decisions.</p>
+        <span>© 2026 SquareMetrix AI</span>
+      </footer>
     </div>
   );
 }
