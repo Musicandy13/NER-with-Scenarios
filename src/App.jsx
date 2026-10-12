@@ -748,7 +748,7 @@ return (
           <p id="ner-app-download-title" className="mb-3 text-sm font-normal text-white">Download the NER app</p>
           <div className="mx-auto grid w-full max-w-[460px] grid-cols-2 items-center gap-4">
             <a href="https://apps.apple.com/us/app/ner-net-effective-rent/id6769180140" target="_blank" rel="noopener noreferrer" aria-label="Download NER on the App Store" className="flex justify-center">
-              <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" className="w-[210px] max-w-full h-auto" loading="lazy" />
+              <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" className="w-[184px] max-w-full h-auto" loading="lazy" />
             </a>
             <a href="https://play.google.com/store/apps/details?id=com.yourcompany.nercalc" target="_blank" rel="noopener noreferrer" aria-label="Get NER on Google Play" className="flex justify-center">
               <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" className="w-[210px] max-w-full h-auto" loading="lazy" />
