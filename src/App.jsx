@@ -762,6 +762,7 @@ return (
       <footer className="smx-footer">
         <a href="https://www.squaremetrix.com/">SquareMetrix<span> AI</span></a>
         <p>Practical apps. Better-informed decisions.</p>
+        <a className="smx-policy-link" href="/privacy_policy_NER.html">Privacy Policy</a>
         <span>© 2026 SquareMetrix AI</span>
       </footer>
     </div>
