@@ -232,6 +232,18 @@ body {
   letter-spacing: -0.4px;
 }
 
+.smx-footer a.smx-policy-link {
+  color: #9cb4d7;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-decoration: underline;
+}
+
+.smx-footer a.smx-policy-link:hover {
+  color: #fff;
+}
+
 .smx-footer p {
   margin: 0;
 }
